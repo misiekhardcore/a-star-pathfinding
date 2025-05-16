@@ -9,3 +9,22 @@
   margin: auto;
   position: relative;
 }
+
+.grid {
+  display: flex;
+  flex-direction: column;
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+
+    .node {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 0, 0, 0.2);
+    }
+  }
+}
