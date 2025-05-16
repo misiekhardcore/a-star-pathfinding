@@ -39,9 +39,19 @@ export default function Home() {
     pathFinding.setGrid(newGrid);
   }
 
+  function runAuto() {
+    const interval = setInterval(() => {
+      if (isEndReached(grid, pathFinding)) {
+        clearInterval(interval);
+      }
+      getNextGrid();
+    }, 100);
+  }
+
   return (
     <main className="main">
       <h1>Pathfinding Visualizer</h1>
+      <button onClick={runAuto}>Run auto</button>
       <button onClick={getNextGrid}>next step</button>
       <button onClick={reset}>reset</button>
       <div className="grid">
@@ -64,17 +74,23 @@ export default function Home() {
     </main>
   );
 
+  function isEndReached(grid: Node[][], pathFinding: PathFinding): boolean {
+    return pathFinding.getLowestFNode() === grid[grid.length - 1][grid[0].length - 1];
+  }
+
   function getNodeColor(node: Node, pathFinding: PathFinding): CSSProperties['color'] | undefined {
-    if (node === startNode) {
-      return 'green';
-    } else if (pathFinding.getLowestFNode() === node) {
+    if (isEndReached(grid, pathFinding) && pathFinding.isPathNode(node)) {
       return 'yellow';
+    } else if (node === startNode) {
+      return 'green';
     } else if (node === endNode) {
       return 'red';
     } else if (!node.isWalkable()) {
       return 'navy';
     } else if (path.includes(node)) {
       return 'purple';
+    } else {
+      return 'white';
     }
   }
 }

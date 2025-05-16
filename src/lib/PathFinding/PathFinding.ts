@@ -121,6 +121,10 @@ export class PathFinding {
     );
   }
 
+  public isPathNode(node: Node): boolean {
+    return this.isInOpen(node) || this.isInClosed(node);
+  }
+
   public reconstructPath(node: Node): Node[] {
     const path = [node];
     while (node.parent) {
