@@ -62,6 +62,7 @@ export default defineConfig([
     '**/jest.setup.js',
     '**/lint-staged.config.js',
     '**/next.config.js',
+    '**/prettier.config.js',
     '.next',
     '.yarn',
     '.swc',
