@@ -5,8 +5,6 @@ import { FlatCompat } from '@eslint/eslintrc';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tsParser from '@typescript-eslint/parser';
 import prettier from 'eslint-plugin-prettier';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import type { Linter, ESLint } from 'eslint';
 import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from '@typescript-eslint/eslint-plugin';
@@ -39,7 +37,7 @@ export default defineConfig([
     },
     plugins: {
       prettier,
-      '@typescript-eslint': typescriptEslint as unknown as ESLint.Plugin,
+      '@typescript-eslint': tseslint,
     },
 
     rules: {
@@ -52,6 +50,8 @@ export default defineConfig([
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          ignoreRestSiblings: true,
         },
       ],
     },
@@ -67,4 +67,4 @@ export default defineConfig([
     '.swc',
     'node_modules',
   ]),
-] satisfies Linter.Config[]);
+]);
