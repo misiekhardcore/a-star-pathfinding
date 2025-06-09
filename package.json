@@ -1,6 +1,6 @@
 {
   "name": "wave-function-collapse",
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "yarn@4.9.2",
   "description": "This is a program to generate a 2D patern using wave function collapse algorithm.",
   "version": "0.0.0-SNAPSHOT",
   "author": {
@@ -39,9 +39,9 @@
     "@testing-library/react": "16.3.0",
     "@types/jest": "29.5.14",
     "@types/jest-image-snapshot": "6.4.0",
-    "@types/node": "22.15.29",
+    "@types/node": "22.15.30",
     "@types/react": "19.1.6",
-    "@types/react-dom": "19.1.5",
+    "@types/react-dom": "19.1.6",
     "@typescript-eslint/eslint-plugin": "8.33.1",
     "@typescript-eslint/parser": "8.33.1",
     "autoprefixer": "10.4.21",
@@ -64,6 +64,6 @@
   },
   "resolutions": {
     "@types/react": "19.1.6",
-    "@types/react-dom": "19.1.5"
+    "@types/react-dom": "19.1.6"
   }
 }
