@@ -1,6 +1,6 @@
 {
   "name": "a-star-pathfinding",
-  "packageManager": "yarn@4.9.2",
+  "packageManager": "yarn@4.9.4",
   "description": "An interactive visualization of the A* pathfinding algorithm built with Next.js, TypeScript, and React.",
   "version": "1.0.0",
   "author": {
@@ -77,7 +77,7 @@
     "typescript": "5.9.2"
   },
   "resolutions": {
-    "@types/react": "19.1.8",
-    "@types/react-dom": "19.1.6"
+    "@types/react": "19.1.14",
+    "@types/react-dom": "19.1.9"
   }
 }
