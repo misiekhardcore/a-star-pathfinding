@@ -41,7 +41,7 @@ export default function Home() {
 
   function runAuto() {
     const interval = setInterval(() => {
-      if (isEndReached(grid, pathFinding)) {
+      if (pathFinding.isEndReached(grid)) {
         clearInterval(interval);
       }
       getNextGrid();
@@ -74,12 +74,8 @@ export default function Home() {
     </main>
   );
 
-  function isEndReached(grid: Node[][], pathFinding: PathFinding): boolean {
-    return pathFinding.getLowestFNode() === grid[grid.length - 1][grid[0].length - 1];
-  }
-
   function getNodeColor(node: Node, pathFinding: PathFinding): CSSProperties['color'] | undefined {
-    if (isEndReached(grid, pathFinding) && pathFinding.isPathNode(node)) {
+    if (pathFinding.isEndReached(grid) && pathFinding.isPathNode(node)) {
       return 'yellow';
     } else if (node === startNode) {
       return 'green';

@@ -82,11 +82,11 @@ export class Node {
     const dY = Math.abs(this.position.y - node.position.y);
     if (dX === 1 && dY === 1) {
       return (
-        grid[this.position.y][node.position.x].walkable &&
-        grid[node.position.y][this.position.x].walkable &&
+        grid[this.position.y][node.position.x].isWalkable() &&
+        grid[node.position.y][this.position.x].isWalkable() &&
         this.isWalkable()
       );
     }
-    return this.walkable;
+    return this.isWalkable();
   }
 }

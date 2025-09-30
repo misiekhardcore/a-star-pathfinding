@@ -39,7 +39,6 @@ export class PathFinding {
     this.addNodeToClosed(lowestFNode);
 
     if (this.isEnd(lowestFNode)) {
-      this.open = [this.endNode];
       return this.reconstructPath(lowestFNode);
     }
 
@@ -66,6 +65,10 @@ export class PathFinding {
     });
 
     return this.reconstructPath(lowestFNode);
+  }
+
+  isEndReached(grid: Node[][]): boolean {
+    return this.getLowestFNode() === grid[grid.length - 1][grid[0].length - 1];
   }
 
   private getHeuristic(node: Node): number {
@@ -128,8 +131,8 @@ export class PathFinding {
   public reconstructPath(node: Node): Node[] {
     const path = [node];
     while (node.parent) {
-      path.push(node);
       node = node.parent;
+      path.push(node);
     }
     return path.reverse();
   }
