@@ -1,24 +1,14 @@
 import { Node } from '@/entities';
-import {
-  GCalculationStrategy,
-  HCalculationStrategy,
-  FCalculationStrategy,
-  DefaultGCalculation,
-  DefaultHCalculation,
-  DefaultFCalculation,
-} from '../strategies';
 
 export class PathFinding {
   private closed: Node[] = [];
   private open: Node[] = [];
+  private path: Node[] = [];
 
   constructor(
     private grid: Node[][],
     private startNode: Node,
-    private endNode: Node,
-    private gStrategy: GCalculationStrategy = new DefaultGCalculation(),
-    private hStrategy: HCalculationStrategy = new DefaultHCalculation(),
-    private fStrategy: FCalculationStrategy = new DefaultFCalculation()
+    private endNode: Node
   ) {
     this.addNodeToOpen(startNode);
     this.initializeNode(startNode);
@@ -27,6 +17,7 @@ export class PathFinding {
   clear() {
     this.closed = [];
     this.open = [this.startNode];
+    this.path = [];
   }
 
   setGrid(grid: Node[][]) {
@@ -34,11 +25,25 @@ export class PathFinding {
     this.clear();
   }
 
+  getGrid(): Node[][] {
+    return this.grid;
+  }
+
+  getPath(): Node[] {
+    return this.path;
+  }
+
+  getStartNode(): Node {
+    return this.startNode;
+  }
+  getEndNode(): Node {
+    return this.endNode;
+  }
+
   initializeNode(node: Node) {
-    const g = this.gStrategy.calculate(node, this.endNode);
-    const h = this.hStrategy.calculate(this.startNode, this.endNode);
-    const f = this.fStrategy.calculate(g, h);
-    node.initialize(g, h, f);
+    const g = node.getDistance(this.endNode);
+    const h = this.getHeuristic(this.startNode);
+    node.initialize(g, h);
   }
 
   getNextStep(): Node[] {
@@ -51,7 +56,6 @@ export class PathFinding {
     this.addNodeToClosed(lowestFNode);
 
     if (this.isEnd(lowestFNode)) {
-      this.open = [this.endNode];
       return this.reconstructPath(lowestFNode);
     }
 
@@ -61,12 +65,14 @@ export class PathFinding {
         return;
       }
 
-      const g = this.gStrategy.calculate(lowestFNode, neighbor);
-      const h = this.hStrategy.calculate(neighbor, this.endNode);
-      const f = this.fStrategy.calculate(g, h);
+      const g = neighbor.getDistance(lowestFNode);
+      const h = this.getHeuristic(neighbor);
+      const f = g + h;
       const isBetter = !this.isInOpen(neighbor) || f < lowestFNode.f;
       if (isBetter && neighbor.isWalkableFromNode(lowestFNode, this.grid)) {
-        neighbor.initialize(g, h, f);
+        neighbor.g = g;
+        neighbor.h = h;
+        neighbor.f = f;
         neighbor.parent = lowestFNode;
 
         if (!this.isInOpen(neighbor)) {
@@ -76,6 +82,14 @@ export class PathFinding {
     });
 
     return this.reconstructPath(lowestFNode);
+  }
+
+  isEndReached(): boolean {
+    return this.getLowestFNode() === this.grid[this.grid.length - 1][this.grid[0].length - 1];
+  }
+
+  private getHeuristic(node: Node): number {
+    return node.position.getDistance(this.endNode.position);
   }
 
   public getLowestFNode(): Node | undefined {
@@ -134,9 +148,10 @@ export class PathFinding {
   public reconstructPath(node: Node): Node[] {
     const path = [node];
     while (node.parent) {
-      path.push(node);
       node = node.parent;
+      path.push(node);
     }
-    return path.reverse();
+    this.path = path.reverse();
+    return this.path;
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, useRef, useState } from 'react';
 
 import './page.scss';
 import { Node, Position } from '@/entities';
@@ -19,33 +19,44 @@ const INITIAL_GRID = generateGrid({
 const pathFinding = new PathFinding(INITIAL_GRID, START_NODE, END_NODE);
 
 export default function Home() {
-  const [startNode] = useState<Node>(START_NODE);
-  const [endNode] = useState<Node>(END_NODE);
   const [grid, setGrid] = useState<Node[][]>(INITIAL_GRID);
-  const [path, setPath] = useState<Node[]>(pathFinding.reconstructPath(startNode));
+  const [path, setPath] = useState<Node[]>(pathFinding.getPath());
+  const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   function getNextGrid() {
     const nextPath = pathFinding.getNextStep();
     if (nextPath) {
-      setPath([...nextPath]);
-      setGrid([...grid]);
+      setPath(pathFinding.getPath());
     }
   }
 
   function reset() {
-    setPath(pathFinding.reconstructPath(startNode));
-    const newGrid = generateGrid({ width: COLS, height: ROWS, startNode, endNode });
-    setGrid(newGrid);
+    pathFinding.clear();
+    setPath(pathFinding.getPath());
+    const newGrid = generateGrid({
+      width: COLS,
+      height: ROWS,
+      startNode: pathFinding.getStartNode(),
+      endNode: pathFinding.getEndNode(),
+    });
     pathFinding.setGrid(newGrid);
+    setGrid(pathFinding.getGrid());
+    stopAuto();
   }
 
   function runAuto() {
-    const interval = setInterval(() => {
-      if (isEndReached(grid, pathFinding)) {
-        clearInterval(interval);
+    interval.current = setInterval(() => {
+      if (pathFinding.isEndReached()) {
+        stopAuto();
+      } else {
+        getNextGrid();
       }
-      getNextGrid();
     }, 100);
+  }
+
+  function stopAuto() {
+    clearInterval(interval.current);
+    interval.current = undefined;
   }
 
   return (
@@ -65,7 +76,11 @@ export default function Home() {
                   color: getNodeColor(node, pathFinding),
                 }}
               >
-                {!node.isWalkable() ? 'X' : [startNode, endNode, ...path].includes(node) ? 'P' : ''}
+                {!node.isWalkable()
+                  ? 'X'
+                  : [pathFinding.getStartNode(), pathFinding.getEndNode(), ...path].includes(node)
+                    ? 'P'
+                    : ''}
               </div>
             ))}
           </div>
@@ -74,16 +89,12 @@ export default function Home() {
     </main>
   );
 
-  function isEndReached(grid: Node[][], pathFinding: PathFinding): boolean {
-    return pathFinding.getLowestFNode() === grid[grid.length - 1][grid[0].length - 1];
-  }
-
   function getNodeColor(node: Node, pathFinding: PathFinding): CSSProperties['color'] | undefined {
-    if (isEndReached(grid, pathFinding) && pathFinding.isPathNode(node)) {
+    if (pathFinding.isEndReached() && pathFinding.isPathNode(node)) {
       return 'yellow';
-    } else if (node === startNode) {
+    } else if (node === pathFinding.getStartNode()) {
       return 'green';
-    } else if (node === endNode) {
+    } else if (node === pathFinding.getEndNode()) {
       return 'red';
     } else if (!node.isWalkable()) {
       return 'navy';
