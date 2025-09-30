@@ -1,4 +1,12 @@
 import { Node } from '@/entities';
+import {
+  GCalculationStrategy,
+  HCalculationStrategy,
+  FCalculationStrategy,
+  DefaultGCalculation,
+  DefaultHCalculation,
+  DefaultFCalculation,
+} from '../strategies';
 
 export class PathFinding {
   private closed: Node[] = [];
@@ -7,7 +15,10 @@ export class PathFinding {
   constructor(
     private grid: Node[][],
     private startNode: Node,
-    private endNode: Node
+    private endNode: Node,
+    private gStrategy: GCalculationStrategy = new DefaultGCalculation(),
+    private hStrategy: HCalculationStrategy = new DefaultHCalculation(),
+    private fStrategy: FCalculationStrategy = new DefaultFCalculation()
   ) {
     this.addNodeToOpen(startNode);
     this.initializeNode(startNode);
@@ -24,9 +35,10 @@ export class PathFinding {
   }
 
   initializeNode(node: Node) {
-    const g = node.getDistance(this.endNode);
-    const h = this.getHeuristic(this.startNode);
-    node.initialize(g, h);
+    const g = this.gStrategy.calculate(node, this.endNode);
+    const h = this.hStrategy.calculate(this.startNode, this.endNode);
+    const f = this.fStrategy.calculate(g, h);
+    node.initialize(g, h, f);
   }
 
   getNextStep(): Node[] {
@@ -49,14 +61,12 @@ export class PathFinding {
         return;
       }
 
-      const g = neighbor.getDistance(lowestFNode);
-      const h = this.getHeuristic(neighbor);
-      const f = g + h;
+      const g = this.gStrategy.calculate(lowestFNode, neighbor);
+      const h = this.hStrategy.calculate(neighbor, this.endNode);
+      const f = this.fStrategy.calculate(g, h);
       const isBetter = !this.isInOpen(neighbor) || f < lowestFNode.f;
       if (isBetter && neighbor.isWalkableFromNode(lowestFNode, this.grid)) {
-        neighbor.g = g;
-        neighbor.h = h;
-        neighbor.f = f;
+        neighbor.initialize(g, h, f);
         neighbor.parent = lowestFNode;
 
         if (!this.isInOpen(neighbor)) {
@@ -66,10 +76,6 @@ export class PathFinding {
     });
 
     return this.reconstructPath(lowestFNode);
-  }
-
-  private getHeuristic(node: Node): number {
-    return node.position.getDistance(this.endNode.position);
   }
 
   public getLowestFNode(): Node | undefined {

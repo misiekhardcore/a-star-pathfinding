@@ -15,10 +15,10 @@ export class Node {
     return new Node(Position.getRandomPosition(maxX, maxY));
   }
 
-  initialize(g: number, h: number): void {
+  initialize(g: number, h: number, f?: number): void {
     this.g = g;
     this.h = h;
-    this.f = g + h;
+    this.f = f !== undefined ? f : g + h;
   }
 
   getDistance(node: Node): number {
