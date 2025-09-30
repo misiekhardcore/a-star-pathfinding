@@ -40,7 +40,7 @@ describe('PathFinding', () => {
       const endNode = grid[2][2];
       const pathFinding = new PathFinding(grid, startNode, endNode);
 
-      while (!pathFinding.isEndReached(grid)) {
+      while (!pathFinding.isEndReached()) {
         pathFinding.getNextStep();
       }
 
@@ -54,7 +54,7 @@ describe('PathFinding', () => {
       const startNode = grid[0][0];
       const endNode = grid[2][2];
       const pathFinding = new PathFinding(grid, startNode, endNode);
-      expect(pathFinding.isEndReached(grid)).toBe(false);
+      expect(pathFinding.isEndReached()).toBe(false);
     });
   });
 

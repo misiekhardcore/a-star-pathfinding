@@ -3,6 +3,7 @@ import { Node } from '@/entities';
 export class PathFinding {
   private closed: Node[] = [];
   private open: Node[] = [];
+  private path: Node[] = [];
 
   constructor(
     private grid: Node[][],
@@ -16,11 +17,27 @@ export class PathFinding {
   clear() {
     this.closed = [];
     this.open = [this.startNode];
+    this.path = [];
   }
 
   setGrid(grid: Node[][]) {
     this.grid = grid;
     this.clear();
+  }
+
+  getGrid(): Node[][] {
+    return this.grid;
+  }
+
+  getPath(): Node[] {
+    return this.path;
+  }
+
+  getStartNode(): Node {
+    return this.startNode;
+  }
+  getEndNode(): Node {
+    return this.endNode;
   }
 
   initializeNode(node: Node) {
@@ -67,8 +84,8 @@ export class PathFinding {
     return this.reconstructPath(lowestFNode);
   }
 
-  isEndReached(grid: Node[][]): boolean {
-    return this.getLowestFNode() === grid[grid.length - 1][grid[0].length - 1];
+  isEndReached(): boolean {
+    return this.getLowestFNode() === this.grid[this.grid.length - 1][this.grid[0].length - 1];
   }
 
   private getHeuristic(node: Node): number {
@@ -134,6 +151,7 @@ export class PathFinding {
       node = node.parent;
       path.push(node);
     }
-    return path.reverse();
+    this.path = path.reverse();
+    return this.path;
   }
 }
