@@ -1,8 +1,8 @@
 {
-  "name": "wave-function-collapse",
+  "name": "a-star-pathfinding",
   "packageManager": "yarn@4.9.2",
-  "description": "This is a program to generate a 2D patern using wave function collapse algorithm.",
-  "version": "0.0.0-SNAPSHOT",
+  "description": "An interactive visualization of the A* pathfinding algorithm built with Next.js, TypeScript, and React.",
+  "version": "1.0.0",
   "author": {
     "name": "Michael Konopski",
     "email": "misiekhardcore@gmail.com",
@@ -10,8 +10,22 @@
   },
   "license": "MIT",
   "keywords": [
-    "wave-function-collapse"
+    "a-star",
+    "pathfinding",
+    "algorithm",
+    "visualization",
+    "nextjs",
+    "typescript",
+    "react"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/misiekhardcore/a-star-pathfinding.git"
+  },
+  "homepage": "https://github.com/misiekhardcore/a-star-pathfinding#readme",
+  "bugs": {
+    "url": "https://github.com/misiekhardcore/a-star-pathfinding/issues"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "yarn lint && next build",
