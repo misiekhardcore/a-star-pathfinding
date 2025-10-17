@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "classnames": "2.5.1",
-    "next": "15.5.4",
+    "next": "15.5.5",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
@@ -55,13 +55,13 @@
     "@types/jest-image-snapshot": "6.4.0",
     "@types/node": "24.7.2",
     "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.1",
-    "@typescript-eslint/eslint-plugin": "8.46.0",
-    "@typescript-eslint/parser": "8.46.0",
+    "@types/react-dom": "19.2.2",
+    "@typescript-eslint/eslint-plugin": "8.46.1",
+    "@typescript-eslint/parser": "8.46.1",
     "autoprefixer": "10.4.21",
     "canvas": "3.2.0",
     "eslint": "9.37.0",
-    "eslint-config-next": "15.5.4",
+    "eslint-config-next": "15.5.5",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
     "globals": "16.4.0",
@@ -78,6 +78,6 @@
   },
   "resolutions": {
     "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.1"
+    "@types/react-dom": "19.2.2"
   }
 }
