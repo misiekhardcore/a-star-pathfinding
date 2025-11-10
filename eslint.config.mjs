@@ -1,11 +1,10 @@
-import { defineConfig, globalIgnores } from 'eslint/config';
 import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 import tsParser from '@typescript-eslint/parser';
 import prettier from 'eslint-plugin-prettier';
 import globals from 'globals';
 import tseslint from '@typescript-eslint/eslint-plugin';
 
-export default defineConfig([
+export default [
   ...nextCoreWebVitals,
   {
     languageOptions: {
@@ -37,16 +36,18 @@ export default defineConfig([
       ],
     },
   },
-  globalIgnores([
-    '**/jest.config.js',
-    '**/cypress.config.ts',
-    '**/jest.setup.js',
-    '**/lint-staged.config.js',
-    '**/next.config.js',
-    '**/prettier.config.js',
-    '.next',
-    '.yarn',
-    '.swc',
-    'node_modules',
-  ]),
-]);
+  {
+    ignores: [
+      '**/jest.config.js',
+      '**/cypress.config.ts',
+      '**/jest.setup.js',
+      '**/lint-staged.config.js',
+      '**/next.config.js',
+      '**/prettier.config.js',
+      '.next',
+      '.yarn',
+      '.swc',
+      'node_modules',
+    ],
+  },
+];
