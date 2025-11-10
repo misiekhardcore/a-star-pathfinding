@@ -27,7 +27,7 @@
     "url": "https://github.com/misiekhardcore/a-star-pathfinding/issues"
   },
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "yarn lint && next build",
     "start": "next start",
     "eslint": "eslint .",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "classnames": "2.5.1",
-    "next": "15.5.6",
+    "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
@@ -61,7 +61,7 @@
     "autoprefixer": "10.4.21",
     "canvas": "3.2.0",
     "eslint": "9.39.1",
-    "eslint-config-next": "15.5.6",
+    "eslint-config-next": "16.0.1",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
     "globals": "16.5.0",
