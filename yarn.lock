@@ -2244,7 +2244,7 @@ __metadata:
     jiti: "npm:2.6.1"
     lint-staged: "npm:16.2.6"
     next: "npm:16.1.0"
-    prettier: "npm:3.7.1"
+    prettier: "npm:3.8.0"
     react: "npm:19.2.0"
     react-dom: "npm:19.2.0"
     sass: "npm:1.97.1"
@@ -6579,12 +6579,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.7.1":
-  version: 3.7.1
-  resolution: "prettier@npm:3.7.1"
+"prettier@npm:3.8.0":
+  version: 3.8.0
+  resolution: "prettier@npm:3.8.0"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/a6610043ee0a64a3251a948bf82fad3e59d984a8e8dea206400cfa190585417e3343b32c1f6ae7d8f40798a9b4bd91affc08fa7795dd99a9dec5c9bccdf31500
+  checksum: 10c0/8926e9c9941a293b76c2d799089d038e9f6d84fb37702fc370bedd03b3c70d7fcf507e2e3c4f151f222d81820a3b74cac5e692c955cfafe34dd0d02616ce8327
   languageName: node
   linkType: hard
 
