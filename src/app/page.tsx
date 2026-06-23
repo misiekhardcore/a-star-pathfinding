@@ -29,9 +29,7 @@ const MOVEMENT_COST_STRATEGIES: {
   id: MovementCostStrategyId;
   label: string;
   factory: () => GCalculationStrategy;
-}[] = [
-  { id: 'diagonal', label: 'Diagonal (default)', factory: () => new DiagonalGCalculation() },
-];
+}[] = [{ id: 'diagonal', label: 'Diagonal (default)', factory: () => new DiagonalGCalculation() }];
 
 const HEURISTIC_STRATEGIES: {
   id: HeuristicStrategyId;
@@ -60,7 +58,9 @@ function createPathFinding(
   heuristicId: HeuristicStrategyId,
   totalCostId: TotalCostStrategyId
 ): PathFinding {
-  const movementCostStrategy = MOVEMENT_COST_STRATEGIES.find((s) => s.id === movementCostId)!.factory();
+  const movementCostStrategy = MOVEMENT_COST_STRATEGIES.find(
+    (s) => s.id === movementCostId
+  )!.factory();
   const heuristicStrategy = HEURISTIC_STRATEGIES.find((s) => s.id === heuristicId)!.factory();
   const totalCostStrategy = TOTAL_COST_STRATEGIES.find((s) => s.id === totalCostId)!.factory();
 
@@ -97,7 +97,11 @@ export default function Home() {
   const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   const rebuild = useCallback(
-    (movementCost: MovementCostStrategyId, heuristic: HeuristicStrategyId, totalCost: TotalCostStrategyId) => {
+    (
+      movementCost: MovementCostStrategyId,
+      heuristic: HeuristicStrategyId,
+      totalCost: TotalCostStrategyId
+    ) => {
       stopAuto();
       const newPathFinder = createPathFinding(movementCost, heuristic, totalCost);
       setPathFinder(newPathFinder);
@@ -234,10 +238,7 @@ export default function Home() {
     </main>
   );
 
-  function getNodeColor(
-    node: Node,
-    pathFinder: PathFinding
-  ): CSSProperties['color'] | undefined {
+  function getNodeColor(node: Node, pathFinder: PathFinding): CSSProperties['color'] | undefined {
     if (pathFinder.isEndReached() && pathFinder.isPathNode(node)) {
       return 'yellow';
     } else if (node === pathFinder.getStartNode()) {
