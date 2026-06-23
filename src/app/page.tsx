@@ -1,52 +1,125 @@
 'use client';
 
-import { CSSProperties, useRef, useState } from 'react';
+import { CSSProperties, useCallback, useRef, useState } from 'react';
 
 import './page.scss';
 import { Node, Position } from '@/entities';
 import { PathFinding } from '@/lib';
+import {
+  AdditiveFCalculation,
+  DiagonalGCalculation,
+  FCalculationStrategy,
+  GCalculationStrategy,
+  HCalculationStrategy,
+  ManhattanHCalculation,
+  SquaredEuclideanHCalculation,
+  WeightedFCalculation,
+} from '@/lib/PathFinding/strategies';
 
 const COLS = 25;
 const ROWS = 25;
 const START_NODE = new Node(new Position(0, 0), null, true);
 const END_NODE = new Node(new Position(COLS - 1, ROWS - 1), null, true);
-const INITIAL_GRID = generateGrid({
-  width: COLS,
-  height: ROWS,
-  startNode: START_NODE,
-  endNode: END_NODE,
-});
-const pathFinding = new PathFinding(INITIAL_GRID, START_NODE, END_NODE);
+
+type GStrategyId = 'diagonal';
+type HStrategyId = 'squaredEuclidean' | 'manhattan';
+type FStrategyId = 'additive' | 'weighted';
+
+const G_STRATEGIES: { id: GStrategyId; label: string; factory: () => GCalculationStrategy }[] = [
+  { id: 'diagonal', label: 'Diagonal (default)', factory: () => new DiagonalGCalculation() },
+];
+
+const H_STRATEGIES: { id: HStrategyId; label: string; factory: () => HCalculationStrategy }[] = [
+  {
+    id: 'squaredEuclidean',
+    label: 'Squared Euclidean (default)',
+    factory: () => new SquaredEuclideanHCalculation(),
+  },
+  { id: 'manhattan', label: 'Manhattan', factory: () => new ManhattanHCalculation() },
+];
+
+const F_STRATEGIES: { id: FStrategyId; label: string; factory: () => FCalculationStrategy }[] = [
+  { id: 'additive', label: 'Additive (default)', factory: () => new AdditiveFCalculation() },
+  { id: 'weighted', label: 'Weighted (1.5)', factory: () => new WeightedFCalculation(1.5) },
+];
+
+function createPathFinding(
+  gId: GStrategyId,
+  hId: HStrategyId,
+  fId: FStrategyId
+): PathFinding {
+  const gStrategy = G_STRATEGIES.find((s) => s.id === gId)!.factory();
+  const hStrategy = H_STRATEGIES.find((s) => s.id === hId)!.factory();
+  const fStrategy = F_STRATEGIES.find((s) => s.id === fId)!.factory();
+
+  const grid = generateFreshGrid();
+  return new PathFinding(grid, START_NODE, END_NODE, gStrategy, hStrategy, fStrategy);
+}
+
+function generateFreshGrid(): Node[][] {
+  return generateGrid({
+    width: COLS,
+    height: ROWS,
+    startNode: START_NODE,
+    endNode: END_NODE,
+  });
+}
 
 export default function Home() {
-  const [grid, setGrid] = useState<Node[][]>(INITIAL_GRID);
-  const [path, setPath] = useState<Node[]>(pathFinding.getPath());
+  const [gId, setGId] = useState<GStrategyId>('diagonal');
+  const [hId, setHId] = useState<HStrategyId>('squaredEuclidean');
+  const [fId, setFId] = useState<FStrategyId>('additive');
+
+  const [pf, setPf] = useState<PathFinding>(() => createPathFinding(gId, hId, fId));
+  const [grid, setGrid] = useState<Node[][]>(pf.getGrid());
+  const [path, setPath] = useState<Node[]>(pf.getPath());
   const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
+  const rebuild = useCallback(
+    (g: GStrategyId, h: HStrategyId, f: FStrategyId) => {
+      stopAuto();
+      const newPf = createPathFinding(g, h, f);
+      setPf(newPf);
+      setGrid(newPf.getGrid());
+      setPath(newPf.getPath());
+    },
+    []
+  );
+
+  function onGChange(id: GStrategyId) {
+    setGId(id);
+    rebuild(id, hId, fId);
+  }
+
+  function onHChange(id: HStrategyId) {
+    setHId(id);
+    rebuild(gId, id, fId);
+  }
+
+  function onFChange(id: FStrategyId) {
+    setFId(id);
+    rebuild(gId, hId, id);
+  }
+
   function getNextGrid() {
-    const nextPath = pathFinding.getNextStep();
+    const nextPath = pf.getNextStep();
     if (nextPath) {
-      setPath(pathFinding.getPath());
+      setPath(pf.getPath());
     }
   }
 
   function reset() {
-    pathFinding.clear();
-    setPath(pathFinding.getPath());
-    const newGrid = generateGrid({
-      width: COLS,
-      height: ROWS,
-      startNode: pathFinding.getStartNode(),
-      endNode: pathFinding.getEndNode(),
-    });
-    pathFinding.setGrid(newGrid);
-    setGrid(pathFinding.getGrid());
+    pf.clear();
+    setPath(pf.getPath());
+    const newGrid = generateFreshGrid();
+    pf.setGrid(newGrid);
+    setGrid(pf.getGrid());
     stopAuto();
   }
 
   function runAuto() {
     interval.current = setInterval(() => {
-      if (pathFinding.isEndReached()) {
+      if (pf.isEndReached()) {
         stopAuto();
       } else {
         getNextGrid();
@@ -62,9 +135,60 @@ export default function Home() {
   return (
     <main className="main">
       <h1>Pathfinding Visualizer</h1>
-      <button onClick={runAuto}>Run auto</button>
-      <button onClick={getNextGrid}>next step</button>
-      <button onClick={reset}>reset</button>
+
+      <div className="controls">
+        <div className="control-group">
+          <label htmlFor="g-strategy">G (movement cost):</label>
+          <select
+            id="g-strategy"
+            value={gId}
+            onChange={(e) => onGChange(e.target.value as GStrategyId)}
+          >
+            {G_STRATEGIES.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="control-group">
+          <label htmlFor="h-strategy">H (heuristic):</label>
+          <select
+            id="h-strategy"
+            value={hId}
+            onChange={(e) => onHChange(e.target.value as HStrategyId)}
+          >
+            {H_STRATEGIES.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="control-group">
+          <label htmlFor="f-strategy">F (total cost):</label>
+          <select
+            id="f-strategy"
+            value={fId}
+            onChange={(e) => onFChange(e.target.value as FStrategyId)}
+          >
+            {F_STRATEGIES.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="buttons">
+        <button onClick={runAuto}>Run auto</button>
+        <button onClick={getNextGrid}>Next step</button>
+        <button onClick={reset}>Reset</button>
+      </div>
+
       <div className="grid">
         {grid.map((row, y) => (
           <div key={y} className="row">
@@ -73,12 +197,12 @@ export default function Home() {
                 key={x}
                 className="node"
                 style={{
-                  color: getNodeColor(node, pathFinding),
+                  color: getNodeColor(node, pf),
                 }}
               >
                 {!node.isWalkable()
                   ? 'X'
-                  : [pathFinding.getStartNode(), pathFinding.getEndNode(), ...path].includes(node)
+                  : [pf.getStartNode(), pf.getEndNode(), ...path].includes(node)
                     ? 'P'
                     : ''}
               </div>
