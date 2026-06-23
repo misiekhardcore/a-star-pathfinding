@@ -56,7 +56,8 @@ const TOTAL_COST_STRATEGIES: {
 function createPathFinding(
   movementCostId: MovementCostStrategyId,
   heuristicId: HeuristicStrategyId,
-  totalCostId: TotalCostStrategyId
+  totalCostId: TotalCostStrategyId,
+  grid: Node[][] = generateFreshGrid()
 ): PathFinding {
   const movementCostStrategy = MOVEMENT_COST_STRATEGIES.find(
     (s) => s.id === movementCostId
@@ -64,7 +65,6 @@ function createPathFinding(
   const heuristicStrategy = HEURISTIC_STRATEGIES.find((s) => s.id === heuristicId)!.factory();
   const totalCostStrategy = TOTAL_COST_STRATEGIES.find((s) => s.id === totalCostId)!.factory();
 
-  const grid = generateFreshGrid();
   return new PathFinding(
     grid,
     START_NODE,
@@ -103,12 +103,14 @@ export default function Home() {
       totalCost: TotalCostStrategyId
     ) => {
       stopAuto();
-      const newPathFinder = createPathFinding(movementCost, heuristic, totalCost);
+      const currentGrid = grid;
+      const newPathFinder = createPathFinding(movementCost, heuristic, totalCost, currentGrid);
+      newPathFinder.clear();
       setPathFinder(newPathFinder);
       setGrid(newPathFinder.getGrid());
       setPath(newPathFinder.getPath());
     },
-    []
+    [grid]
   );
 
   function onMovementCostChange(id: MovementCostStrategyId) {
