@@ -27,13 +27,55 @@
       font-weight: 600;
     }
 
-    select {
+    select,
+    input[type='number'] {
       padding: 0.3rem 0.5rem;
       border: 1px solid #888;
       border-radius: 4px;
       background: #fff;
       font-size: 0.85rem;
       cursor: pointer;
+      width: 80px;
+    }
+
+    input[type='number'] {
+      cursor: text;
+      -moz-appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.interaction-modes {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .mode-btn {
+    padding: 0.3rem 0.75rem;
+    border: 2px solid #888;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      border-color: #aaa;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.active {
+      border-color: #4caf50;
+      background: rgba(76, 175, 80, 0.15);
+      color: #4caf50;
+      font-weight: 600;
     }
   }
 }
@@ -41,6 +83,8 @@
 .buttons {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .grid {
@@ -49,7 +93,7 @@
 
   .row {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 
     .node {
       width: 40px;
@@ -58,6 +102,46 @@
       align-items: center;
       justify-content: center;
       border: 1px solid rgba(255, 0, 0, 0.2);
+      cursor: pointer;
+      transition: background-color 0.1s ease;
+      user-select: none;
+      font-size: 0.75rem;
+      font-weight: 700;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+
+      &.obstacle {
+        background-color: navy;
+        color: white;
+      }
+
+      &.start {
+        background-color: green;
+        color: white;
+      }
+
+      &.end {
+        background-color: red;
+        color: white;
+      }
+
+      &.on-path {
+        background-color: purple;
+        color: white;
+      }
+
+      &.visited {
+        background-color: yellow;
+        color: black;
+      }
+
+      &.placement-mode {
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+      }
     }
   }
 }
