@@ -21,15 +21,23 @@ const ROWS = 25;
 const START_NODE = new Node(new Position(0, 0), null, true);
 const END_NODE = new Node(new Position(COLS - 1, ROWS - 1), null, true);
 
-type GStrategyId = 'diagonal';
-type HStrategyId = 'squaredEuclidean' | 'manhattan';
-type FStrategyId = 'additive' | 'weighted';
+type MovementCostStrategyId = 'diagonal';
+type HeuristicStrategyId = 'squaredEuclidean' | 'manhattan';
+type TotalCostStrategyId = 'additive' | 'weighted';
 
-const G_STRATEGIES: { id: GStrategyId; label: string; factory: () => GCalculationStrategy }[] = [
+const MOVEMENT_COST_STRATEGIES: {
+  id: MovementCostStrategyId;
+  label: string;
+  factory: () => GCalculationStrategy;
+}[] = [
   { id: 'diagonal', label: 'Diagonal (default)', factory: () => new DiagonalGCalculation() },
 ];
 
-const H_STRATEGIES: { id: HStrategyId; label: string; factory: () => HCalculationStrategy }[] = [
+const HEURISTIC_STRATEGIES: {
+  id: HeuristicStrategyId;
+  label: string;
+  factory: () => HCalculationStrategy;
+}[] = [
   {
     id: 'squaredEuclidean',
     label: 'Squared Euclidean (default)',
@@ -38,22 +46,33 @@ const H_STRATEGIES: { id: HStrategyId; label: string; factory: () => HCalculatio
   { id: 'manhattan', label: 'Manhattan', factory: () => new ManhattanHCalculation() },
 ];
 
-const F_STRATEGIES: { id: FStrategyId; label: string; factory: () => FCalculationStrategy }[] = [
+const TOTAL_COST_STRATEGIES: {
+  id: TotalCostStrategyId;
+  label: string;
+  factory: () => FCalculationStrategy;
+}[] = [
   { id: 'additive', label: 'Additive (default)', factory: () => new AdditiveFCalculation() },
   { id: 'weighted', label: 'Weighted (1.5)', factory: () => new WeightedFCalculation(1.5) },
 ];
 
 function createPathFinding(
-  gId: GStrategyId,
-  hId: HStrategyId,
-  fId: FStrategyId
+  movementCostId: MovementCostStrategyId,
+  heuristicId: HeuristicStrategyId,
+  totalCostId: TotalCostStrategyId
 ): PathFinding {
-  const gStrategy = G_STRATEGIES.find((s) => s.id === gId)!.factory();
-  const hStrategy = H_STRATEGIES.find((s) => s.id === hId)!.factory();
-  const fStrategy = F_STRATEGIES.find((s) => s.id === fId)!.factory();
+  const movementCostStrategy = MOVEMENT_COST_STRATEGIES.find((s) => s.id === movementCostId)!.factory();
+  const heuristicStrategy = HEURISTIC_STRATEGIES.find((s) => s.id === heuristicId)!.factory();
+  const totalCostStrategy = TOTAL_COST_STRATEGIES.find((s) => s.id === totalCostId)!.factory();
 
   const grid = generateFreshGrid();
-  return new PathFinding(grid, START_NODE, END_NODE, gStrategy, hStrategy, fStrategy);
+  return new PathFinding(
+    grid,
+    START_NODE,
+    END_NODE,
+    movementCostStrategy,
+    heuristicStrategy,
+    totalCostStrategy
+  );
 }
 
 function generateFreshGrid(): Node[][] {
@@ -66,60 +85,62 @@ function generateFreshGrid(): Node[][] {
 }
 
 export default function Home() {
-  const [gId, setGId] = useState<GStrategyId>('diagonal');
-  const [hId, setHId] = useState<HStrategyId>('squaredEuclidean');
-  const [fId, setFId] = useState<FStrategyId>('additive');
+  const [movementCostId, setMovementCostId] = useState<MovementCostStrategyId>('diagonal');
+  const [heuristicId, setHeuristicId] = useState<HeuristicStrategyId>('squaredEuclidean');
+  const [totalCostId, setTotalCostId] = useState<TotalCostStrategyId>('additive');
 
-  const [pf, setPf] = useState<PathFinding>(() => createPathFinding(gId, hId, fId));
-  const [grid, setGrid] = useState<Node[][]>(pf.getGrid());
-  const [path, setPath] = useState<Node[]>(pf.getPath());
+  const [pathFinder, setPathFinder] = useState<PathFinding>(() =>
+    createPathFinding(movementCostId, heuristicId, totalCostId)
+  );
+  const [grid, setGrid] = useState<Node[][]>(pathFinder.getGrid());
+  const [path, setPath] = useState<Node[]>(pathFinder.getPath());
   const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   const rebuild = useCallback(
-    (g: GStrategyId, h: HStrategyId, f: FStrategyId) => {
+    (movementCost: MovementCostStrategyId, heuristic: HeuristicStrategyId, totalCost: TotalCostStrategyId) => {
       stopAuto();
-      const newPf = createPathFinding(g, h, f);
-      setPf(newPf);
-      setGrid(newPf.getGrid());
-      setPath(newPf.getPath());
+      const newPathFinder = createPathFinding(movementCost, heuristic, totalCost);
+      setPathFinder(newPathFinder);
+      setGrid(newPathFinder.getGrid());
+      setPath(newPathFinder.getPath());
     },
     []
   );
 
-  function onGChange(id: GStrategyId) {
-    setGId(id);
-    rebuild(id, hId, fId);
+  function onMovementCostChange(id: MovementCostStrategyId) {
+    setMovementCostId(id);
+    rebuild(id, heuristicId, totalCostId);
   }
 
-  function onHChange(id: HStrategyId) {
-    setHId(id);
-    rebuild(gId, id, fId);
+  function onHeuristicChange(id: HeuristicStrategyId) {
+    setHeuristicId(id);
+    rebuild(movementCostId, id, totalCostId);
   }
 
-  function onFChange(id: FStrategyId) {
-    setFId(id);
-    rebuild(gId, hId, id);
+  function onTotalCostChange(id: TotalCostStrategyId) {
+    setTotalCostId(id);
+    rebuild(movementCostId, heuristicId, id);
   }
 
   function getNextGrid() {
-    const nextPath = pf.getNextStep();
+    const nextPath = pathFinder.getNextStep();
     if (nextPath) {
-      setPath(pf.getPath());
+      setPath(pathFinder.getPath());
     }
   }
 
   function reset() {
-    pf.clear();
-    setPath(pf.getPath());
+    pathFinder.clear();
+    setPath(pathFinder.getPath());
     const newGrid = generateFreshGrid();
-    pf.setGrid(newGrid);
-    setGrid(pf.getGrid());
+    pathFinder.setGrid(newGrid);
+    setGrid(pathFinder.getGrid());
     stopAuto();
   }
 
   function runAuto() {
     interval.current = setInterval(() => {
-      if (pf.isEndReached()) {
+      if (pathFinder.isEndReached()) {
         stopAuto();
       } else {
         getNextGrid();
@@ -138,13 +159,13 @@ export default function Home() {
 
       <div className="controls">
         <div className="control-group">
-          <label htmlFor="g-strategy">G (movement cost):</label>
+          <label htmlFor="movement-cost-strategy">Movement cost:</label>
           <select
-            id="g-strategy"
-            value={gId}
-            onChange={(e) => onGChange(e.target.value as GStrategyId)}
+            id="movement-cost-strategy"
+            value={movementCostId}
+            onChange={(e) => onMovementCostChange(e.target.value as MovementCostStrategyId)}
           >
-            {G_STRATEGIES.map((s) => (
+            {MOVEMENT_COST_STRATEGIES.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.label}
               </option>
@@ -153,13 +174,13 @@ export default function Home() {
         </div>
 
         <div className="control-group">
-          <label htmlFor="h-strategy">H (heuristic):</label>
+          <label htmlFor="heuristic-strategy">Heuristic:</label>
           <select
-            id="h-strategy"
-            value={hId}
-            onChange={(e) => onHChange(e.target.value as HStrategyId)}
+            id="heuristic-strategy"
+            value={heuristicId}
+            onChange={(e) => onHeuristicChange(e.target.value as HeuristicStrategyId)}
           >
-            {H_STRATEGIES.map((s) => (
+            {HEURISTIC_STRATEGIES.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.label}
               </option>
@@ -168,13 +189,13 @@ export default function Home() {
         </div>
 
         <div className="control-group">
-          <label htmlFor="f-strategy">F (total cost):</label>
+          <label htmlFor="total-cost-strategy">Total cost:</label>
           <select
-            id="f-strategy"
-            value={fId}
-            onChange={(e) => onFChange(e.target.value as FStrategyId)}
+            id="total-cost-strategy"
+            value={totalCostId}
+            onChange={(e) => onTotalCostChange(e.target.value as TotalCostStrategyId)}
           >
-            {F_STRATEGIES.map((s) => (
+            {TOTAL_COST_STRATEGIES.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.label}
               </option>
@@ -197,12 +218,12 @@ export default function Home() {
                 key={x}
                 className="node"
                 style={{
-                  color: getNodeColor(node, pf),
+                  color: getNodeColor(node, pathFinder),
                 }}
               >
                 {!node.isWalkable()
                   ? 'X'
-                  : [pf.getStartNode(), pf.getEndNode(), ...path].includes(node)
+                  : [pathFinder.getStartNode(), pathFinder.getEndNode(), ...path].includes(node)
                     ? 'P'
                     : ''}
               </div>
@@ -213,12 +234,15 @@ export default function Home() {
     </main>
   );
 
-  function getNodeColor(node: Node, pathFinding: PathFinding): CSSProperties['color'] | undefined {
-    if (pathFinding.isEndReached() && pathFinding.isPathNode(node)) {
+  function getNodeColor(
+    node: Node,
+    pathFinder: PathFinding
+  ): CSSProperties['color'] | undefined {
+    if (pathFinder.isEndReached() && pathFinder.isPathNode(node)) {
       return 'yellow';
-    } else if (node === pathFinding.getStartNode()) {
+    } else if (node === pathFinder.getStartNode()) {
       return 'green';
-    } else if (node === pathFinding.getEndNode()) {
+    } else if (node === pathFinder.getEndNode()) {
       return 'red';
     } else if (!node.isWalkable()) {
       return 'navy';
