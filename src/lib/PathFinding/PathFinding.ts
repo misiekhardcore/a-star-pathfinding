@@ -1,8 +1,8 @@
 import { Node } from '@/entities';
 import {
-  DefaultFCalculation,
-  DefaultGCalculation,
-  DefaultHCalculation,
+  AdditiveFCalculation,
+  DiagonalGCalculation,
+  SquaredEuclideanHCalculation,
   FCalculationStrategy,
   GCalculationStrategy,
   HCalculationStrategy,
@@ -17,9 +17,9 @@ export class PathFinding {
     private grid: Node[][],
     private startNode: Node,
     private endNode: Node,
-    private gCalculation: GCalculationStrategy = new DefaultGCalculation(),
-    private hCalculation: HCalculationStrategy = new DefaultHCalculation(),
-    private fCalculation: FCalculationStrategy = new DefaultFCalculation()
+    private gCalculation: GCalculationStrategy = new DiagonalGCalculation(),
+    private hCalculation: HCalculationStrategy = new SquaredEuclideanHCalculation(),
+    private fCalculation: FCalculationStrategy = new AdditiveFCalculation()
   ) {
     this.addNodeToOpen(startNode);
     this.initializeNode(startNode);

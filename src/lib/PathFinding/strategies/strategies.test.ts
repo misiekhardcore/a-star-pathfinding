@@ -1,30 +1,30 @@
 import { Node, Position } from '@/entities';
 import {
-  DefaultFCalculation,
-  DefaultGCalculation,
-  DefaultHCalculation,
+  AdditiveFCalculation,
+  DiagonalGCalculation,
+  SquaredEuclideanHCalculation,
   ManhattanHCalculation,
   WeightedFCalculation,
 } from './index';
 
 describe('GCalculation strategies', () => {
-  describe('DefaultGCalculation', () => {
+  describe('DiagonalGCalculation', () => {
     it('returns Node.getDistance() between two nodes', () => {
-      const strategy = new DefaultGCalculation();
+      const strategy = new DiagonalGCalculation();
       const nodeA = new Node(new Position(0, 0));
       const nodeB = new Node(new Position(0, 1));
       expect(strategy.calculate(nodeA, nodeB)).toBe(1);
     });
 
     it('is symmetric', () => {
-      const strategy = new DefaultGCalculation();
+      const strategy = new DiagonalGCalculation();
       const nodeA = new Node(new Position(0, 0));
       const nodeB = new Node(new Position(1, 2));
       expect(strategy.calculate(nodeA, nodeB)).toBe(strategy.calculate(nodeB, nodeA));
     });
 
     it('treats diagonal distance (dx=1, dy=1) as 1', () => {
-      const strategy = new DefaultGCalculation();
+      const strategy = new DiagonalGCalculation();
       const nodeA = new Node(new Position(0, 0));
       const nodeB = new Node(new Position(1, 1));
       // Node.getDistance returns 1 for distance=2 (diagonal compression)
@@ -34,9 +34,9 @@ describe('GCalculation strategies', () => {
 });
 
 describe('HCalculation strategies', () => {
-  describe('DefaultHCalculation', () => {
+  describe('SquaredEuclideanHCalculation', () => {
     it('returns Position.getDistance() (squared Euclidean)', () => {
-      const strategy = new DefaultHCalculation();
+      const strategy = new SquaredEuclideanHCalculation();
       const node = new Node(new Position(0, 0));
       const goal = new Node(new Position(3, 4));
       // Euclidean squared: 3^2 + 4^2 = 9 + 16 = 25
@@ -44,7 +44,7 @@ describe('HCalculation strategies', () => {
     });
 
     it('returns 0 for same node', () => {
-      const strategy = new DefaultHCalculation();
+      const strategy = new SquaredEuclideanHCalculation();
       const node = new Node(new Position(3, 4));
       expect(strategy.calculate(node, node)).toBe(0);
     });
@@ -74,9 +74,9 @@ describe('HCalculation strategies', () => {
 });
 
 describe('FCalculation strategies', () => {
-  describe('DefaultFCalculation', () => {
+  describe('AdditiveFCalculation', () => {
     it('returns g + h', () => {
-      const strategy = new DefaultFCalculation();
+      const strategy = new AdditiveFCalculation();
       expect(strategy.calculate(10, 5)).toBe(15);
       expect(strategy.calculate(0, 0)).toBe(0);
     });
@@ -119,9 +119,9 @@ describe('Strategy integration with PathFinding', () => {
       grid,
       startNode,
       endNode,
-      new DefaultGCalculation(),
+      new DiagonalGCalculation(),
       new ManhattanHCalculation(),
-      new DefaultFCalculation()
+      new AdditiveFCalculation()
     );
 
     while (!pf.isEndReached()) {
@@ -149,8 +149,8 @@ describe('Strategy integration with PathFinding', () => {
       grid,
       startNode,
       endNode,
-      new DefaultGCalculation(),
-      new DefaultHCalculation(),
+      new DiagonalGCalculation(),
+      new SquaredEuclideanHCalculation(),
       new WeightedFCalculation(1.5)
     );
 
