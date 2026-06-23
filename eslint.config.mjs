@@ -47,6 +47,7 @@ export default [
       '.next',
       '.yarn',
       '.swc',
+      '.pi',
       'node_modules',
     ],
   },

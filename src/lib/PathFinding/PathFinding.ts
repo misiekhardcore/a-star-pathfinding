@@ -1,4 +1,12 @@
 import { Node } from '@/entities';
+import {
+  AdditiveFCalculation,
+  DiagonalGCalculation,
+  SquaredEuclideanHCalculation,
+  FCalculationStrategy,
+  GCalculationStrategy,
+  HCalculationStrategy,
+} from './strategies';
 
 export class PathFinding {
   private closed: Node[] = [];
@@ -8,7 +16,10 @@ export class PathFinding {
   constructor(
     private grid: Node[][],
     private startNode: Node,
-    private endNode: Node
+    private endNode: Node,
+    private gCalculation: GCalculationStrategy = new DiagonalGCalculation(),
+    private hCalculation: HCalculationStrategy = new SquaredEuclideanHCalculation(),
+    private fCalculation: FCalculationStrategy = new AdditiveFCalculation()
   ) {
     this.addNodeToOpen(startNode);
     this.initializeNode(startNode);
@@ -41,8 +52,8 @@ export class PathFinding {
   }
 
   initializeNode(node: Node) {
-    const g = node.getDistance(this.endNode);
-    const h = this.getHeuristic(this.startNode);
+    const g = this.gCalculation.calculate(node, this.endNode);
+    const h = this.hCalculation.calculate(node, this.endNode);
     node.initialize(g, h);
   }
 
@@ -65,9 +76,9 @@ export class PathFinding {
         return;
       }
 
-      const g = neighbor.getDistance(lowestFNode);
-      const h = this.getHeuristic(neighbor);
-      const f = g + h;
+      const g = this.gCalculation.calculate(lowestFNode, neighbor);
+      const h = this.hCalculation.calculate(neighbor, this.endNode);
+      const f = this.fCalculation.calculate(g, h);
       const isBetter = !this.isInOpen(neighbor) || f < lowestFNode.f;
       if (isBetter && neighbor.isWalkableFromNode(lowestFNode, this.grid)) {
         neighbor.g = g;
@@ -86,10 +97,6 @@ export class PathFinding {
 
   isEndReached(): boolean {
     return this.getLowestFNode() === this.grid[this.grid.length - 1][this.grid[0].length - 1];
-  }
-
-  private getHeuristic(node: Node): number {
-    return node.position.getDistance(this.endNode.position);
   }
 
   public getLowestFNode(): Node | undefined {
