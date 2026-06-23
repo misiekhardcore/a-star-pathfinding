@@ -1,6 +1,6 @@
-# AGENTS.md — A* Pathfinding Visualizer
+# AGENTS.md — A\* Pathfinding Visualizer
 
-Interactive A* pathfinding algorithm visualization built with Next.js, TypeScript, and React.
+Interactive A\* pathfinding algorithm visualization built with Next.js, TypeScript, and React.
 
 ## Project overview
 
@@ -33,9 +33,10 @@ src/
     └── index.ts
 ```
 
-## A* algorithm overview
+## A\* algorithm overview
 
-The A* algorithm calculates path cost as **f(n) = g(n) + h(n)**:
+The A\* algorithm calculates path cost as **f(n) = g(n) + h(n)**:
+
 - **g(n)** — movement cost from start to node n (strategizable via `GCalculationStrategy`)
 - **h(n)** — heuristic estimate from node n to goal (strategizable via `HCalculationStrategy`)
 - **f(n)** — total estimated cost (strategizable via `FCalculationStrategy`)
@@ -71,19 +72,19 @@ yarn build
 
 ## Scripts
 
-| Script | What it does |
-|---|---|
-| `yarn dev` | Start dev server (Next.js Turbopack) |
-| `yarn build` | `yarn lint && next build` |
-| `yarn lint` | `yarn eslint && yarn prettier` |
-| `yarn eslint` | `eslint .` |
-| `yarn prettier` | `prettier . --check` |
-| `yarn test` | `jest` |
-| `yarn test:watch` | `jest --watch` |
+| Script            | What it does                         |
+| ----------------- | ------------------------------------ |
+| `yarn dev`        | Start dev server (Next.js Turbopack) |
+| `yarn build`      | `yarn lint && next build`            |
+| `yarn lint`       | `yarn eslint && yarn prettier`       |
+| `yarn eslint`     | `eslint .`                           |
+| `yarn prettier`   | `prettier . --check`                 |
+| `yarn test`       | `jest`                               |
+| `yarn test:watch` | `jest --watch`                       |
 
 ## Key files
 
-- `src/lib/PathFinding/PathFinding.ts` — Core A* algorithm with strategy injection
+- `src/lib/PathFinding/PathFinding.ts` — Core A\* algorithm with strategy injection
 - `src/lib/PathFinding/strategies/` — Strategy interfaces and implementations
 - `src/app/page.tsx` — UI with interactive grid, controls, and strategy selectors
 - `src/entities/Node/Node.ts` — Grid node with neighbors, walkability, distance
