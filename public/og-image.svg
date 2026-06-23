@@ -1,0 +1,52 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#1a1a1a" />
+  <rect x="50" y="50" width="1100" height="530" rx="20" fill="#2a2a2a" />
+
+  <!-- Grid background -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#3a3a3a" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect x="100" y="150" width="1000" height="400" fill="url(#grid)" />
+
+  <!-- Start node -->
+  <circle cx="150" cy="200" r="15" fill="#22c55e" />
+  <text x="150" y="205" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12"
+    font-weight="bold">S</text>
+
+  <!-- End node -->
+  <circle cx="1050" cy="500" r="15" fill="#ef4444" />
+  <text x="1050" y="505" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12"
+    font-weight="bold">E</text>
+
+  <!-- Path -->
+  <path
+    d="M 150 200 L 190 200 L 230 240 L 270 200 L 310 240 L 350 200 L 390 240 L 430 200 L 470 240 L 510 200 L 550 240 L 590 200 L 630 240 L 670 200 L 710 240 L 750 200 L 790 240 L 830 200 L 870 240 L 910 200 L 950 240 L 990 200 L 1030 240 L 1050 500"
+    stroke="#8b5cf6" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Obstacles -->
+  <rect x="300" y="300" width="40" height="40" fill="#1e40af" />
+  <rect x="400" y="350" width="40" height="40" fill="#1e40af" />
+  <rect x="500" y="300" width="40" height="40" fill="#1e40af" />
+  <rect x="600" y="350" width="40" height="40" fill="#1e40af" />
+  <rect x="700" y="300" width="40" height="40" fill="#1e40af" />
+  <rect x="800" y="350" width="40" height="40" fill="#1e40af" />
+
+  <!-- Title -->
+  <text x="600" y="100" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="48"
+    font-weight="bold">A* Pathfinding Visualizer</text>
+  <text x="600" y="140" text-anchor="middle" fill="#8b5cf6" font-family="Arial, sans-serif" font-size="24">Interactive
+    Algorithm Visualization</text>
+
+  <!-- Legend -->
+  <text x="100" y="580" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Legend:</text>
+  <circle cx="200" cy="575" r="8" fill="#22c55e" />
+  <text x="220" y="580" fill="white" font-family="Arial, sans-serif" font-size="14">Start</text>
+  <circle cx="300" cy="575" r="8" fill="#ef4444" />
+  <text x="320" y="580" fill="white" font-family="Arial, sans-serif" font-size="14">End</text>
+  <line x1="400" y1="575" x2="420" y2="575" stroke="#8b5cf6" stroke-width="4" />
+  <text x="430" y="580" fill="white" font-family="Arial, sans-serif" font-size="14">Path</text>
+  <rect x="500" y="567" width="16" height="16" fill="#1e40af" />
+  <text x="525" y="580" fill="white" font-family="Arial, sans-serif" font-size="14">Obstacle</text>
+</svg>
