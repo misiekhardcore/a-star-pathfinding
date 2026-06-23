@@ -46,4 +46,4 @@
 - [x] Run lint — clean (only pre-existing next-env.d.ts error)
 - [x] Run type check — clean
 - [x] Run format check — clean
-- [ ] Push branch and verify CI
+- [x] Push branch and verify CI
