@@ -15,7 +15,7 @@ export function InteractionModeBar({ interactionMode, onModeChange }: Interactio
         <button
           key={mode.id}
           className={`mode-btn ${interactionMode === mode.id ? 'active' : ''}`}
-          onClick={() => onModeChange(mode.id)}
+          onClick={() => onModeChange(interactionMode === mode.id ? null : mode.id)}
         >
           {mode.label}
         </button>

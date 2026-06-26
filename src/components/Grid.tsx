@@ -39,7 +39,7 @@ export function Grid({
               isEnd ? 'end' : '',
               isEndReached && pathFinder.isPathNode(node) ? 'visited' : '',
               isPathNode ? 'on-path' : '',
-              interactionMode !== 'obstacle' ? 'placement-mode' : '',
+              interactionMode !== 'obstacle' && interactionMode !== null ? 'placement-mode' : '',
             ]
               .filter(Boolean)
               .join(' ');

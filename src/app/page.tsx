@@ -33,7 +33,7 @@ export default function Home() {
   const [movementCostId, setMovementCostId] = useState<MovementCostStrategyId>('diagonal');
   const [heuristicId, setHeuristicId] = useState<HeuristicStrategyId>('squaredEuclidean');
   const [totalCostId, setTotalCostId] = useState<TotalCostStrategyId>('additive');
-  const [interactionMode, setInteractionMode] = useState<InteractionMode>('obstacle');
+  const [interactionMode, setInteractionMode] = useState<InteractionMode>(null);
 
   const [pathFinder, setPathFinder] = useState<PathFinding>(() => {
     const startPos = new Position(0, 0);
@@ -145,7 +145,9 @@ export default function Home() {
   }
 
   function onNodeClick(node: Node) {
-    if (interactionMode === 'obstacle') {
+    if (interactionMode === null) {
+      return;
+    } else if (interactionMode === 'obstacle') {
       toggleNodeWalkability(node);
     } else if (interactionMode === 'start') {
       moveStart(node);
