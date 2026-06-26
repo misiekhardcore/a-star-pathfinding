@@ -87,61 +87,11 @@
   justify-content: center;
 }
 
-.grid {
-  display: flex;
-  flex-direction: column;
+.grid-canvas {
+  cursor: pointer;
+  user-select: none;
 
-  .row {
-    display: flex;
-    flex-wrap: nowrap;
-
-    .node {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255, 0, 0, 0.2);
-      cursor: pointer;
-      transition: background-color 0.1s ease;
-      user-select: none;
-      font-size: 0.75rem;
-      font-weight: 700;
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-      }
-
-      &.obstacle {
-        background-color: navy;
-        color: white;
-      }
-
-      &.start {
-        background-color: green;
-        color: white;
-      }
-
-      &.end {
-        background-color: red;
-        color: white;
-      }
-
-      &.on-path {
-        background-color: purple;
-        color: white;
-      }
-
-      &.visited {
-        background-color: yellow;
-        color: black;
-      }
-
-      &.placement-mode {
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.3);
-        }
-      }
-    }
+  &.placement-mode {
+    cursor: crosshair;
   }
 }
