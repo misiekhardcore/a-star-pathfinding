@@ -51,11 +51,13 @@ export default function Home() {
   const [grid, setGrid] = useState<Node[][]>(pathFinder.getGrid());
   const [path, setPath] = useState<Node[]>(pathFinder.getPath());
   const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const autoActive = useRef(false);
 
   const startNode = pathFinder.getStartNode();
   const endNode = pathFinder.getEndNode();
 
   function stopAuto() {
+    autoActive.current = false;
     clearInterval(interval.current);
     interval.current = undefined;
   }
@@ -245,7 +247,10 @@ export default function Home() {
   }
 
   function runAuto() {
+    stopAuto();
+    autoActive.current = true;
     interval.current = setInterval(() => {
+      if (!autoActive.current) return;
       if (pathFinder.isEndReached()) {
         stopAuto();
       } else {
