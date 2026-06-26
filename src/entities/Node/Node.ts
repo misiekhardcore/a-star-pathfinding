@@ -70,6 +70,10 @@ export class Node {
     return this.walkable;
   }
 
+  setWalkable(walkable: boolean): void {
+    this.walkable = walkable;
+  }
+
   isWalkableFromNode(node: Node, grid: Node[][]): boolean {
     const neighbors = this.getNeighbors(grid);
     if (node === this) {

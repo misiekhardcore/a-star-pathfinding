@@ -1,131 +1,223 @@
 'use client';
 
-import { CSSProperties, useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import './page.scss';
 import { Node, Position } from '@/entities';
 import { PathFinding } from '@/lib';
 import {
-  AdditiveFCalculation,
-  DiagonalGCalculation,
-  FCalculationStrategy,
-  GCalculationStrategy,
-  HCalculationStrategy,
-  ManhattanHCalculation,
-  SquaredEuclideanHCalculation,
-  WeightedFCalculation,
-} from '@/lib/PathFinding/strategies';
-
-const COLS = 25;
-const ROWS = 25;
-const START_NODE = new Node(new Position(0, 0), null, true);
-const END_NODE = new Node(new Position(COLS - 1, ROWS - 1), null, true);
-
-type MovementCostStrategyId = 'diagonal';
-type HeuristicStrategyId = 'squaredEuclidean' | 'manhattan';
-type TotalCostStrategyId = 'additive' | 'weighted';
-
-const MOVEMENT_COST_STRATEGIES: {
-  id: MovementCostStrategyId;
-  label: string;
-  factory: () => GCalculationStrategy;
-}[] = [{ id: 'diagonal', label: 'Diagonal (default)', factory: () => new DiagonalGCalculation() }];
-
-const HEURISTIC_STRATEGIES: {
-  id: HeuristicStrategyId;
-  label: string;
-  factory: () => HCalculationStrategy;
-}[] = [
-  {
-    id: 'squaredEuclidean',
-    label: 'Squared Euclidean (default)',
-    factory: () => new SquaredEuclideanHCalculation(),
-  },
-  { id: 'manhattan', label: 'Manhattan', factory: () => new ManhattanHCalculation() },
-];
-
-const TOTAL_COST_STRATEGIES: {
-  id: TotalCostStrategyId;
-  label: string;
-  factory: () => FCalculationStrategy;
-}[] = [
-  { id: 'additive', label: 'Additive (default)', factory: () => new AdditiveFCalculation() },
-  { id: 'weighted', label: 'Weighted (1.5)', factory: () => new WeightedFCalculation(1.5) },
-];
-
-function createPathFinding(
-  movementCostId: MovementCostStrategyId,
-  heuristicId: HeuristicStrategyId,
-  totalCostId: TotalCostStrategyId,
-  grid: Node[][] = generateFreshGrid()
-): PathFinding {
-  const movementCostStrategy = MOVEMENT_COST_STRATEGIES.find(
-    (s) => s.id === movementCostId
-  )!.factory();
-  const heuristicStrategy = HEURISTIC_STRATEGIES.find((s) => s.id === heuristicId)!.factory();
-  const totalCostStrategy = TOTAL_COST_STRATEGIES.find((s) => s.id === totalCostId)!.factory();
-
-  return new PathFinding(
-    grid,
-    START_NODE,
-    END_NODE,
-    movementCostStrategy,
-    heuristicStrategy,
-    totalCostStrategy
-  );
-}
-
-function generateFreshGrid(): Node[][] {
-  return generateGrid({
-    width: COLS,
-    height: ROWS,
-    startNode: START_NODE,
-    endNode: END_NODE,
-  });
-}
+  ActionButtons,
+  DimensionControls,
+  Grid,
+  InteractionModeBar,
+  StrategyControls,
+} from '@/components';
+import {
+  buildPathFinding,
+  cloneGrid,
+  DEFAULT_HEIGHT,
+  DEFAULT_WIDTH,
+  generateGrid,
+  makeNode,
+} from '@/lib/grid-utils';
+import type {
+  HeuristicStrategyId,
+  InteractionMode,
+  MovementCostStrategyId,
+  TotalCostStrategyId,
+} from '@/types';
 
 export default function Home() {
+  const [gridWidth, setGridWidth] = useState(DEFAULT_WIDTH);
+  const [gridHeight, setGridHeight] = useState(DEFAULT_HEIGHT);
   const [movementCostId, setMovementCostId] = useState<MovementCostStrategyId>('diagonal');
   const [heuristicId, setHeuristicId] = useState<HeuristicStrategyId>('squaredEuclidean');
   const [totalCostId, setTotalCostId] = useState<TotalCostStrategyId>('additive');
+  const [interactionMode, setInteractionMode] = useState<InteractionMode>(null);
 
-  const [pathFinder, setPathFinder] = useState<PathFinding>(() =>
-    createPathFinding(movementCostId, heuristicId, totalCostId)
-  );
+  const [pathFinder, setPathFinder] = useState<PathFinding>(() => {
+    const startPos = new Position(0, 0);
+    const endPos = new Position(DEFAULT_WIDTH - 1, DEFAULT_HEIGHT - 1);
+    const startNode = makeNode(startPos, true);
+    const endNode = makeNode(endPos, true);
+    const grid = generateGrid({
+      width: DEFAULT_WIDTH,
+      height: DEFAULT_HEIGHT,
+      startNode,
+      endNode,
+    });
+    return buildPathFinding(grid, startPos, endPos, movementCostId, heuristicId, totalCostId);
+  });
   const [grid, setGrid] = useState<Node[][]>(pathFinder.getGrid());
   const [path, setPath] = useState<Node[]>(pathFinder.getPath());
   const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
-  const rebuild = useCallback(
-    (
-      movementCost: MovementCostStrategyId,
-      heuristic: HeuristicStrategyId,
-      totalCost: TotalCostStrategyId
-    ) => {
-      stopAuto();
-      const currentGrid = grid;
-      const newPathFinder = createPathFinding(movementCost, heuristic, totalCost, currentGrid);
-      newPathFinder.clear();
-      setPathFinder(newPathFinder);
-      setGrid(newPathFinder.getGrid());
-      setPath(newPathFinder.getPath());
-    },
-    [grid]
-  );
+  const startNode = pathFinder.getStartNode();
+  const endNode = pathFinder.getEndNode();
+
+  function stopAuto() {
+    clearInterval(interval.current);
+    interval.current = undefined;
+  }
+
+  function setNewPathFinder(newPf: PathFinding) {
+    newPf.clear();
+    setPathFinder(newPf);
+    setGrid(newPf.getGrid());
+    setPath(newPf.getPath());
+  }
 
   function onMovementCostChange(id: MovementCostStrategyId) {
+    stopAuto();
     setMovementCostId(id);
-    rebuild(id, heuristicId, totalCostId);
+    setNewPathFinder(
+      buildPathFinding(
+        cloneGrid(grid),
+        startNode.position,
+        endNode.position,
+        id,
+        heuristicId,
+        totalCostId
+      )
+    );
   }
 
   function onHeuristicChange(id: HeuristicStrategyId) {
+    stopAuto();
     setHeuristicId(id);
-    rebuild(movementCostId, id, totalCostId);
+    setNewPathFinder(
+      buildPathFinding(
+        cloneGrid(grid),
+        startNode.position,
+        endNode.position,
+        movementCostId,
+        id,
+        totalCostId
+      )
+    );
   }
 
   function onTotalCostChange(id: TotalCostStrategyId) {
+    stopAuto();
     setTotalCostId(id);
-    rebuild(movementCostId, heuristicId, id);
+    setNewPathFinder(
+      buildPathFinding(
+        cloneGrid(grid),
+        startNode.position,
+        endNode.position,
+        movementCostId,
+        heuristicId,
+        id
+      )
+    );
+  }
+
+  function onDimensionChange(dimension: 'width' | 'height', value: number) {
+    const clampedValue = Math.max(5, Math.min(50, value));
+    const newWidth = dimension === 'width' ? clampedValue : gridWidth;
+    const newHeight = dimension === 'height' ? clampedValue : gridHeight;
+
+    if (!isFinite(clampedValue) || clampedValue < 5) {
+      return;
+    }
+
+    stopAuto();
+    const startPos = new Position(0, 0);
+    const endPos = new Position(newWidth - 1, newHeight - 1);
+    const newStartNode = makeNode(startPos);
+    const newEndNode = makeNode(endPos);
+    const newGrid = generateGrid({
+      width: newWidth,
+      height: newHeight,
+      startNode: newStartNode,
+      endNode: newEndNode,
+    });
+
+    if (dimension === 'width') {
+      setGridWidth(clampedValue);
+    } else {
+      setGridHeight(clampedValue);
+    }
+
+    setNewPathFinder(
+      buildPathFinding(newGrid, startPos, endPos, movementCostId, heuristicId, totalCostId)
+    );
+  }
+
+  function onNodeClick(node: Node) {
+    if (interactionMode === null) {
+      return;
+    } else if (interactionMode === 'obstacle') {
+      toggleNodeWalkability(node);
+    } else if (interactionMode === 'start') {
+      moveStart(node);
+    } else if (interactionMode === 'end') {
+      moveEnd(node);
+    }
+  }
+
+  function toggleNodeWalkability(node: Node) {
+    if (node === startNode || node === endNode) {
+      return;
+    }
+
+    stopAuto();
+    const newGrid = cloneGrid(grid);
+    const targetNode = newGrid[node.position.y][node.position.x];
+    targetNode.setWalkable(!targetNode.isWalkable());
+    pathFinder.setGrid(newGrid);
+    pathFinder.clear();
+    setGrid(newGrid);
+    setPath(pathFinder.getPath());
+  }
+
+  function moveStart(node: Node) {
+    if (node.position.x === endNode.position.x && node.position.y === endNode.position.y) {
+      return;
+    }
+
+    stopAuto();
+    const newGrid = cloneGrid(grid);
+    const newPos = new Position(node.position.x, node.position.y);
+    setNewPathFinder(
+      buildPathFinding(newGrid, newPos, endNode.position, movementCostId, heuristicId, totalCostId)
+    );
+  }
+
+  function moveEnd(node: Node) {
+    if (node.position.x === startNode.position.x && node.position.y === startNode.position.y) {
+      return;
+    }
+
+    stopAuto();
+    const newGrid = cloneGrid(grid);
+    const newPos = new Position(node.position.x, node.position.y);
+    setNewPathFinder(
+      buildPathFinding(
+        newGrid,
+        startNode.position,
+        newPos,
+        movementCostId,
+        heuristicId,
+        totalCostId
+      )
+    );
+  }
+
+  function clearObstacles() {
+    stopAuto();
+    const newGrid = cloneGrid(grid);
+    for (const row of newGrid) {
+      for (const cell of row) {
+        if (cell !== startNode && cell !== endNode) {
+          cell.setWalkable(true);
+        }
+      }
+    }
+    pathFinder.setGrid(newGrid);
+    pathFinder.clear();
+    setGrid(newGrid);
+    setPath(pathFinder.getPath());
   }
 
   function getNextGrid() {
@@ -136,12 +228,20 @@ export default function Home() {
   }
 
   function reset() {
-    pathFinder.clear();
-    setPath(pathFinder.getPath());
-    const newGrid = generateFreshGrid();
-    pathFinder.setGrid(newGrid);
-    setGrid(pathFinder.getGrid());
     stopAuto();
+    const startPos = new Position(0, 0);
+    const endPos = new Position(gridWidth - 1, gridHeight - 1);
+    const newStartNode = makeNode(startPos);
+    const newEndNode = makeNode(endPos);
+    const newGrid = generateGrid({
+      width: gridWidth,
+      height: gridHeight,
+      startNode: newStartNode,
+      endNode: newEndNode,
+    });
+    setNewPathFinder(
+      buildPathFinding(newGrid, startPos, endPos, movementCostId, heuristicId, totalCostId)
+    );
   }
 
   function runAuto() {
@@ -154,130 +254,44 @@ export default function Home() {
     }, 100);
   }
 
-  function stopAuto() {
-    clearInterval(interval.current);
-    interval.current = undefined;
-  }
-
   return (
     <main className="main">
       <h1>Pathfinding Visualizer</h1>
 
       <div className="controls">
-        <div className="control-group">
-          <label htmlFor="movement-cost-strategy">Movement cost:</label>
-          <select
-            id="movement-cost-strategy"
-            value={movementCostId}
-            onChange={(e) => onMovementCostChange(e.target.value as MovementCostStrategyId)}
-          >
-            {MOVEMENT_COST_STRATEGIES.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="control-group">
-          <label htmlFor="heuristic-strategy">Heuristic:</label>
-          <select
-            id="heuristic-strategy"
-            value={heuristicId}
-            onChange={(e) => onHeuristicChange(e.target.value as HeuristicStrategyId)}
-          >
-            {HEURISTIC_STRATEGIES.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="control-group">
-          <label htmlFor="total-cost-strategy">Total cost:</label>
-          <select
-            id="total-cost-strategy"
-            value={totalCostId}
-            onChange={(e) => onTotalCostChange(e.target.value as TotalCostStrategyId)}
-          >
-            {TOTAL_COST_STRATEGIES.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <DimensionControls
+          gridWidth={gridWidth}
+          gridHeight={gridHeight}
+          onDimensionChange={onDimensionChange}
+        />
+        <StrategyControls
+          movementCostId={movementCostId}
+          heuristicId={heuristicId}
+          totalCostId={totalCostId}
+          onMovementCostChange={onMovementCostChange}
+          onHeuristicChange={onHeuristicChange}
+          onTotalCostChange={onTotalCostChange}
+        />
       </div>
 
-      <div className="buttons">
-        <button onClick={runAuto}>Run auto</button>
-        <button onClick={getNextGrid}>Next step</button>
-        <button onClick={reset}>Reset</button>
-      </div>
+      <InteractionModeBar interactionMode={interactionMode} onModeChange={setInteractionMode} />
 
-      <div className="grid">
-        {grid.map((row, y) => (
-          <div key={y} className="row">
-            {row.map((node, x) => (
-              <div
-                key={x}
-                className="node"
-                style={{
-                  color: getNodeColor(node, pathFinder),
-                }}
-              >
-                {!node.isWalkable()
-                  ? 'X'
-                  : [pathFinder.getStartNode(), pathFinder.getEndNode(), ...path].includes(node)
-                    ? 'P'
-                    : ''}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+      <ActionButtons
+        onRunAuto={runAuto}
+        onNextStep={getNextGrid}
+        onClearObstacles={clearObstacles}
+        onReset={reset}
+      />
+
+      <Grid
+        grid={grid}
+        startNode={startNode}
+        endNode={endNode}
+        path={path}
+        pathFinder={pathFinder}
+        interactionMode={interactionMode}
+        onNodeClick={onNodeClick}
+      />
     </main>
   );
-
-  function getNodeColor(node: Node, pathFinder: PathFinding): CSSProperties['color'] | undefined {
-    if (pathFinder.isEndReached() && pathFinder.isPathNode(node)) {
-      return 'yellow';
-    } else if (node === pathFinder.getStartNode()) {
-      return 'green';
-    } else if (node === pathFinder.getEndNode()) {
-      return 'red';
-    } else if (!node.isWalkable()) {
-      return 'navy';
-    } else if (path.includes(node)) {
-      return 'purple';
-    } else {
-      return 'white';
-    }
-  }
-}
-
-function generateGrid({
-  width,
-  height,
-  endNode,
-  startNode,
-}: {
-  width: number;
-  height: number;
-  startNode: Node;
-  endNode: Node;
-}): Node[][] {
-  const grid: Node[][] = [];
-  for (let y = 0; y < height; y++) {
-    grid[y] = [];
-    for (let x = 0; x < width; x++) {
-      grid[y][x] = new Node(new Position(x, y), null, Math.random() > 0.2);
-    }
-  }
-
-  grid[startNode.position.y][startNode.position.x] = startNode;
-  grid[endNode.position.y][endNode.position.x] = endNode;
-
-  return grid;
 }
