@@ -50,16 +50,16 @@ export default function Home() {
   });
   const [grid, setGrid] = useState<Node[][]>(pathFinder.getGrid());
   const [path, setPath] = useState<Node[]>(pathFinder.getPath());
-  const interval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
-  const autoActive = useRef(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const autoActiveRef = useRef(false);
 
   const startNode = pathFinder.getStartNode();
   const endNode = pathFinder.getEndNode();
 
   function stopAuto() {
-    autoActive.current = false;
-    clearInterval(interval.current);
-    interval.current = undefined;
+    autoActiveRef.current = false;
+    clearInterval(intervalRef.current);
+    intervalRef.current = undefined;
   }
 
   function setNewPathFinder(newPf: PathFinding) {
@@ -248,9 +248,9 @@ export default function Home() {
 
   function runAuto() {
     stopAuto();
-    autoActive.current = true;
-    interval.current = setInterval(() => {
-      if (!autoActive.current) return;
+    autoActiveRef.current = true;
+    intervalRef.current = setInterval(() => {
+      if (!autoActiveRef.current) return;
       if (pathFinder.isEndReached()) {
         stopAuto();
       } else {

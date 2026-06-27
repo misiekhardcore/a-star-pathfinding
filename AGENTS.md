@@ -11,7 +11,7 @@ Interactive A\* pathfinding algorithm visualization built with Next.js, TypeScri
 
 ## Code structure
 
-```
+```plain
 src/
 ├── app/                        # Next.js App Router pages & global styles
 │   ├── page.tsx                # Main visualization page (client component)
