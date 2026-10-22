@@ -1,13 +1,17 @@
-# AGENTS.md — A\* Pathfinding Visualizer
-
-Interactive A\* pathfinding algorithm visualization built with Next.js, TypeScript, and React.
+# AGENTS.md — Internal Developer Documentation
 
 ## Project overview
 
-- **Repo**: https://github.com/misiekhardcore/a-star-pathfinding
-- **Stack**: Next.js 16, React 19, TypeScript 5.9, Sass, Jest, ESLint, Prettier
-- **Package manager**: Yarn 4.x
-- **Entry point**: `src/app/page.tsx`
+# 📖 AGENTS.md — Internal Developer Documentation
+
+- **Tech Stack**:
+  - Next.js 16 (App Router)
+  - React 19 with TypeScript 5.9+
+  - Sass for styling
+  - Jest + Testing Library for tests
+  - ESLint, Prettier, Husky + lint-staged
+- **Package Manager**: Yarn v4.x
+- **Entry Point**: `src/app/page.tsx`
 
 ## Code structure
 
@@ -43,7 +47,7 @@ The A\* algorithm calculates path cost as **f(n) = g(n) + h(n)**:
 
 All three calculations use the **strategy pattern** via `PathFinding` constructor injection, defaulting to original behavior when omitted.
 
-## Key conventions
+# 📐 Code Quality & Validation Workflow
 
 - **Strategy naming**: Name implementations by their mathematical behavior (e.g., `DiagonalGCalculation`, `SquaredEuclideanHCalculation`, `AdditiveFCalculation`), never `Default*`.
 - **Co-located tests**: Tests live next to source files (`.test.ts`).

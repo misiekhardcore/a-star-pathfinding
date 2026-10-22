@@ -1,19 +1,29 @@
 # A\* Pathfinding Visualizer
 
-An interactive visualization of the A\* pathfinding algorithm built with Next.js, TypeScript, and React. Watch as the algorithm finds the optimal path from start to end while avoiding obstacles in real-time.
+An interactive visualization of the A\* pathfinding algorithm built with Next.js 16, TypeScript, and React 19. Watch as the algorithm finds the optimal path from start to end while avoiding obstacles in real-time.
 
-![A* Pathfinding Visualizer](https://img.shields.io/badge/Next.js-15.5.4-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue?style=for-the-badge&logo=typescript)
-![React](https://img.shields.io/badge/React-19.1.1-blue?style=for-the-badge&logo=react)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?style=for-the-badge&logo=typescript)
+![React 19](https://img.shields.io/badge/React-19-purple?style=for-the-badge&logo=react)
 
-## Features
+# Contributing
 
-- 🎯 **Interactive A\* Algorithm**: Step-by-step visualization of the A\* pathfinding algorithm
+Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+# License
+
+MIT — see [LICENSE](./LICENSE)
+
 - 🎮 **Real-time Controls**: Run auto, step through manually, or reset the grid
 - 🎨 **Visual Feedback**: Color-coded nodes showing different states (start, end, path, obstacles)
 - 🧩 **Dynamic Grid**: Randomly generated obstacles for varied pathfinding challenges
 - 📱 **Responsive Design**: Works on desktop and mobile devices
-- ⚡ **Fast Performance**: Optimized with Next.js 15 and React 19
+
+---
+
+## Accessibility
+
+This visualization includes keyboard navigation support. Press `Tab` to access controls, `Enter` to confirm actions, and `Esc` to reset the grid.
 
 ## How It Works
 
