@@ -1,7 +1,3 @@
-# AGENTS.md — Internal Developer Documentation
-
-## Project overview
-
 # 📖 AGENTS.md — Internal Developer Documentation
 
 - **Tech Stack**:
@@ -47,7 +43,7 @@ The A\* algorithm calculates path cost as **f(n) = g(n) + h(n)**:
 
 All three calculations use the **strategy pattern** via `PathFinding` constructor injection, defaulting to original behavior when omitted.
 
-# 📐 Code Quality & Validation Workflow
+## 📐 Code Quality & Validation Workflow
 
 - **Strategy naming**: Name implementations by their mathematical behavior (e.g., `DiagonalGCalculation`, `SquaredEuclideanHCalculation`, `AdditiveFCalculation`), never `Default*`.
 - **Co-located tests**: Tests live next to source files (`.test.ts`).
