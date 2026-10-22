@@ -6,11 +6,11 @@ An interactive visualization of the A\* pathfinding algorithm built with Next.js
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?style=for-the-badge&logo=typescript)
 ![React 19](https://img.shields.io/badge/React-19-purple?style=for-the-badge&logo=react)
 
-# Contributing
+## Contributing
 
 Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
-# License
+## License
 
 MIT — see [LICENSE](./LICENSE)
 
