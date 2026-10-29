@@ -2804,8 +2804,8 @@ __metadata:
     lint-staged: "npm:17.0.8"
     next: "npm:16.2.12"
     prettier: "npm:3.9.10"
-    react: "npm:19.2.7"
-    react-dom: "npm:19.2.7"
+    react: "npm:19.2.9"
+    react-dom: "npm:19.2.9"
     sass: "npm:1.101.7"
     ts-node: "npm:10.9.2"
     typescript: "npm:6.0.3"
@@ -8137,14 +8137,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:19.2.7":
-  version: 19.2.7
-  resolution: "react-dom@npm:19.2.7"
+"react-dom@npm:19.2.9":
+  version: 19.2.9
+  resolution: "react-dom@npm:19.2.9"
   dependencies:
     scheduler: "npm:^0.27.0"
   peerDependencies:
-    react: ^19.2.7
-  checksum: 10c0/970ff600f6e80d47d39e2f226f12f226173b3cba3382efc97c5f0cd663de9af38c7a4c11c213fb936094faeac83060d660247accaa96b752180d5b951b9cfecb
+    react: ^19.2.9
+  checksum: 10c0/798031e6f5bbc12f5ff10dc3a92d6ec50d73a5b0acdbf1075a1d3fc949c48410784a1e5eb8d2096e6b86067acbc9353048da0ccbe4adbc48e247bf68f2cb1a24
   languageName: node
   linkType: hard
 
@@ -8176,10 +8176,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:19.2.7":
-  version: 19.2.7
-  resolution: "react@npm:19.2.7"
-  checksum: 10c0/0bd0e2f1bbd4ba97561c6597bf8a5fec05e6476fe61e165c1065598d16668efc6715205599c94d3ddd49d36cb0f21cbf1b9bcc18ee840b805ce222c3e8d558ac
+"react@npm:19.2.9":
+  version: 19.2.9
+  resolution: "react@npm:19.2.9"
+  checksum: 10c0/2177cc3206824d0d18fa2c40bbbfd64f5716d5f932917d1be6863ce2f14555e6df60fa4621a69780f8986f27d5e0d696b0d8d6cac941f45b3bacf1bea2e0f732
   languageName: node
   linkType: hard
 
