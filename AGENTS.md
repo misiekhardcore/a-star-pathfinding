@@ -61,8 +61,9 @@ All three calculations use the **strategy pattern** via `PathFinding` constructo
 
 - `@konopskidev/ui` supplies every component, colour token and the type scale; Tailwind v4 compiles
   it through `postcss.config.mjs`.
-- `src/app/globals.css` imports Tailwind first, then `@konopskidev/ui/styles.css`, then registers the
-  package's `dist` as a Tailwind source so component classes are generated.
+- `src/app/globals.css` imports Tailwind first, then `@konopskidev/ui/styles.css`; the package's
+  published stylesheet registers its own modules as Tailwind sources, so the app writes no
+  `@source` path.
 - Dark mode is the `.dark` class on `<html>`. `ThemeProvider` owns the choice (`a-star-theme` in
   `localStorage`), and `ThemeScript` applies it before first paint to avoid a flash.
 - The canvas API cannot resolve the design system's referenced tokens, so board colours are explicit
