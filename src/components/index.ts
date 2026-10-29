@@ -1,5 +1,9 @@
 export { ActionButtons } from './ActionButtons';
+export { AppHeader } from './AppHeader';
 export { DimensionControls } from './DimensionControls';
 export { Grid } from './Grid';
 export { InteractionModeBar } from './InteractionModeBar';
+export { Panel } from './Panel';
 export { StrategyControls } from './StrategyControls';
+export { ThemeToggle } from './ThemeToggle';
+export { VisualizerPanel } from './VisualizerPanel';

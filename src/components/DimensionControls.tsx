@@ -1,6 +1,11 @@
 'use client';
 
-import { MIN_DIMENSION, MAX_DIMENSION } from '@/lib/grid-utils';
+import { Field, FieldLabel } from '@konopskidev/ui/components/field';
+import { Slider } from '@konopskidev/ui/components/slider';
+
+import { MAX_DIMENSION, MIN_DIMENSION } from '@/lib/grid-utils';
+
+import { Panel } from './Panel';
 
 interface DimensionControlsProps {
   gridWidth: number;
@@ -14,30 +19,53 @@ export function DimensionControls({
   onDimensionChange,
 }: DimensionControlsProps) {
   return (
-    <>
-      <div className="control-group">
-        <label htmlFor="grid-width">Width:</label>
-        <input
-          id="grid-width"
-          type="number"
-          min={MIN_DIMENSION}
-          max={MAX_DIMENSION}
-          value={gridWidth}
-          onChange={(e) => onDimensionChange('width', Number(e.target.value))}
-        />
-      </div>
+    <Panel title="Grid size" description="Resize the board. Every change re-rolls the obstacles.">
+      <DimensionSlider
+        id="grid-width"
+        label="Columns"
+        value={gridWidth}
+        onChange={(value) => onDimensionChange('width', value)}
+      />
+      <DimensionSlider
+        id="grid-height"
+        label="Rows"
+        value={gridHeight}
+        onChange={(value) => onDimensionChange('height', value)}
+      />
+    </Panel>
+  );
+}
 
-      <div className="control-group">
-        <label htmlFor="grid-height">Height:</label>
-        <input
-          id="grid-height"
-          type="number"
-          min={MIN_DIMENSION}
-          max={MAX_DIMENSION}
-          value={gridHeight}
-          onChange={(e) => onDimensionChange('height', Number(e.target.value))}
-        />
+interface DimensionSliderProps {
+  id: string;
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+}
+
+/**
+ * A dimension slider with a mono readout.
+ *
+ * The name lives on the thumb, which is what takes focus, so a screen reader
+ * announces "Columns, 25" rather than an unnamed slider.
+ */
+function DimensionSlider({ id, label, value, onChange }: DimensionSliderProps) {
+  return (
+    <Field className="gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <FieldLabel htmlFor={id}>{label}</FieldLabel>
+        <span className="font-mono text-xs text-muted-foreground tabular-nums">{value}</span>
       </div>
-    </>
+      <Slider
+        id={id}
+        aria-label={label}
+        thumbLabels={[label]}
+        min={MIN_DIMENSION}
+        max={MAX_DIMENSION}
+        step={1}
+        value={[value]}
+        onValueChange={([nextValue]) => onChange(nextValue)}
+      />
+    </Field>
   );
 }

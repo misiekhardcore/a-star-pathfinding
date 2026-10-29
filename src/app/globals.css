@@ -1,0 +1,58 @@
+/*
+ * Application stylesheet.
+ *
+ * Tailwind owns the utilities, `@konopskidev/ui` owns the tokens, components
+ * and type scale. Import order matters: Tailwind first, then the design
+ * system, so its `@theme` and base rules win over Tailwind's defaults.
+ */
+
+@import 'tailwindcss';
+@import '@konopskidev/ui/styles.css';
+
+/* Let Tailwind see the class names the design-system components carry. */
+@source '../../node_modules/@konopskidev/ui/dist';
+
+/*
+ * Canvas palette.
+ *
+ * The grid reads these at draw time, so the board always matches the scheme of
+ * the page around it. The values are explicit hex and not references to the
+ * design tokens: `getComputedStyle` returns `var(--tok-string)` verbatim for a
+ * token defined by reference, which the canvas API cannot parse.
+ */
+:root {
+  --grid-cell: #ffffff;
+  --grid-line: #e1e4e7;
+  --grid-start: #1f7a4d;
+  --grid-end: #b4362f;
+  --grid-path: #1f4fa3;
+  --grid-explored: #1f4fa31f;
+  --grid-obstacle: #5d6670;
+  --grid-hover: #00000014;
+}
+
+.dark {
+  --grid-cell: #1b2126;
+  --grid-line: #2b333a;
+  --grid-start: #4ec58a;
+  --grid-end: #e07b73;
+  --grid-path: #7aa7ee;
+  --grid-explored: #7aa7ee26;
+  --grid-obstacle: #98a2ac;
+  --grid-hover: #ffffff1f;
+}
+
+@layer base {
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans, var(--font-lato), ui-sans-serif, system-ui, sans-serif);
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

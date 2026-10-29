@@ -3,7 +3,7 @@
 - **Tech Stack**:
   - Next.js 16 (App Router)
   - React 19 with TypeScript 5.9+
-  - Sass for styling
+  - Tailwind CSS v4 + [`@konopskidev/ui`](https://www.npmjs.com/package/@konopskidev/ui) for styling
   - Jest + Testing Library for tests
   - ESLint, Prettier, Husky + lint-staged
 - **Package Manager**: Yarn v4.x
@@ -15,9 +15,23 @@
 src/
 ├── app/                        # Next.js App Router pages & global styles
 │   ├── page.tsx                # Main visualization page (client component)
-│   ├── page.scss               # Page-specific styles
-│   ├── layout.tsx              # Root layout
-│   └── globals.scss            # Global styles / CSS variables
+│   ├── layout.tsx              # Root layout: fonts, theme provider, metadata
+│   └── globals.css             # Tailwind entry, design-system import, grid palette
+├── components/                 # UI, styled with Tailwind + @konopskidev/ui
+│   ├── AppHeader.tsx           # Sticky header with the theme toggle
+│   ├── ThemeToggle.tsx         # Light / system / dark switch
+│   ├── Panel.tsx               # Shared titled card wrapper
+│   ├── DimensionControls.tsx   # Grid size sliders
+│   ├── StrategyControls.tsx    # Movement / heuristic / total-cost selects
+│   ├── VisualizerPanel.tsx     # Grid card: legend, draw mode, actions
+│   ├── Grid.tsx                # Canvas board, responsive cells
+│   ├── InteractionModeBar.tsx  # Draw-mode toggle group
+│   ├── ActionButtons.tsx       # Run / step / clear / reset
+│   └── index.ts                # Barrel exports
+├── theme/                      # Colour scheme + canvas palette
+│   ├── ThemeProvider.tsx       # Theme context, localStorage, system preference
+│   ├── ThemeScript.tsx         # Inline script that prevents a theme flash
+│   └── useGridPalette.ts       # Reads the --grid-* tokens for the canvas
 ├── entities/                   # Domain entities (co-located tests)
 │   ├── Node/Node.ts            # Grid node with position, walkability, neighbors
 │   ├── Position/Position.ts    # 2D coordinate with distance utilities
@@ -42,6 +56,18 @@ The A\* algorithm calculates path cost as **f(n) = g(n) + h(n)**:
 - **f(n)** — total estimated cost (strategizable via `FCalculationStrategy`)
 
 All three calculations use the **strategy pattern** via `PathFinding` constructor injection, defaulting to original behavior when omitted.
+
+## 🎨 UI layer
+
+- `@konopskidev/ui` supplies every component, colour token and the type scale; Tailwind v4 compiles
+  it through `postcss.config.mjs`.
+- `src/app/globals.css` imports Tailwind first, then `@konopskidev/ui/styles.css`, then registers the
+  package's `dist` as a Tailwind source so component classes are generated.
+- Dark mode is the `.dark` class on `<html>`. `ThemeProvider` owns the choice (`a-star-theme` in
+  `localStorage`), and `ThemeScript` applies it before first paint to avoid a flash.
+- The canvas API cannot resolve the design system's referenced tokens, so board colours are explicit
+  hex `--grid-*` tokens per scheme, read through `useGridPalette`.
+- Interaction state stays in `page.tsx`; `components/` holds presentation only.
 
 ## 📐 Code Quality & Validation Workflow
 
@@ -86,5 +112,8 @@ yarn build
 
 - `src/lib/PathFinding/PathFinding.ts` — Core A\* algorithm with strategy injection
 - `src/lib/PathFinding/strategies/` — Strategy interfaces and implementations
-- `src/app/page.tsx` — UI with interactive grid, controls, and strategy selectors
+- `src/app/page.tsx` — UI shell: state, handlers, and the two-column layout
+- `src/app/globals.css` — Tailwind entry, design-system import, `--grid-*` palette
+- `src/components/Grid.tsx` — canvas board with responsive cell sizing and palette drawing
+- `src/theme/ThemeProvider.tsx` — light / system / dark theme state
 - `src/entities/Node/Node.ts` — Grid node with neighbors, walkability, distance

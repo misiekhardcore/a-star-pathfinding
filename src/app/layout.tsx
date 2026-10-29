@@ -1,10 +1,36 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { JetBrains_Mono, Lato, Playfair_Display } from 'next/font/google';
 
-import './globals.scss';
+import './globals.css';
 import { ReactNode } from 'react';
 
-const inter = Inter({ subsets: ['latin'] });
+import { ThemeProvider } from '@/theme/ThemeProvider';
+import { ThemeScript } from '@/theme/ThemeScript';
+
+/*
+ * The design system reads these variables for its type scale: Lato for body
+ * copy, Playfair Display for headings, JetBrains Mono for numeric readouts.
+ */
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-lato',
+  display: 'swap',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  variable: '--font-playfair',
+  display: 'swap',
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'A* Pathfinding Visualizer',
@@ -46,8 +72,17 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html
+      lang="en"
+      // The theme script sets `dark` and `color-scheme` on <html> before
+      // hydration, which React cannot know about.
+      suppressHydrationWarning
+      className={`${lato.variable} ${playfair.variable} ${jetbrains.variable}`}
+    >
+      <body className="min-h-svh bg-background text-foreground antialiased">
+        <ThemeScript />
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

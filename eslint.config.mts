@@ -46,7 +46,23 @@ export default defineConfig([
     language: 'markdown/gfm',
     extends: ['markdown/recommended'],
   },
-  { files: ['**/*.css'], plugins: { css }, language: 'css/css', extends: ['css/recommended'] },
+  {
+    files: ['**/*.css'],
+    plugins: { css },
+    language: 'css/css',
+    extends: ['css/recommended'],
+    rules: {
+      // Design-system tokens (`--background`, `--font-sans`, …) are declared by
+      // `@konopskidev/ui`, so the `var()` references here cannot be resolved.
+      'css/no-invalid-properties': ['error', { allowUnknownVariables: true }],
+    },
+  },
+  {
+    // Tailwind's `@source` is not standard CSS and `@eslint/css` offers no
+    // allow-list for at-rules; every other CSS rule still applies.
+    files: ['src/app/globals.css'],
+    rules: { 'css/no-invalid-at-rules': 'off' },
+  },
   {
     ignores: [
       '**/jest.config.js',
