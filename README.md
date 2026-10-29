@@ -17,7 +17,8 @@ MIT — see [LICENSE](./LICENSE)
 - 🎮 **Real-time Controls**: Run auto, step through manually, or reset the grid
 - 🎨 **Visual Feedback**: Color-coded nodes showing different states (start, end, path, obstacles)
 - 🧩 **Dynamic Grid**: Randomly generated obstacles for varied pathfinding challenges
-- 📱 **Responsive Design**: Works on desktop and mobile devices
+- 📱 **Responsive Design**: The board fits its column at any grid size, from 5 × 5 to 50 × 50
+- 🌗 **Light, system and dark themes**: Every surface and board colour follows the design system tokens
 
 ---
 
@@ -30,8 +31,8 @@ This visualization includes keyboard navigation support. Press `Tab` to access c
 The A\* algorithm combines:
 
 - **G-cost**: Distance from start node
-- **H-cost**: Heuristic distance to end node (Manhattan distance)
-- **F-cost**: G + H (total estimated cost)
+- **H-cost**: Heuristic distance to end node (squared Euclidean by default, Manhattan selectable)
+- **F-cost**: G + H (total estimated cost, optionally weighted)
 
 The algorithm explores nodes with the lowest F-cost first, ensuring it finds the optimal path while being more efficient than Dijkstra's algorithm.
 
@@ -75,7 +76,9 @@ yarn dev
 
 - 🟢 **Green**: Start node
 - 🔴 **Red**: End node
-- 🟣 **Purple**: Current path being explored
-- 🟡 **Yellow**: Final optimal path (when algorithm completes)
-- 🔵 **Navy**: Obstacles/walls
-- ⚪ **Black**: Unexplored walkable nodes
+- 🔵 **Blue**: Current best path
+- 🔷 **Faint blue**: Nodes the search has visited or queued
+- ⬛ **Grey**: Obstacles/walls
+- ⬜ **Surface**: Unexplored walkable nodes
+
+The same legend is rendered under the board, and the colours follow the selected light or dark theme.

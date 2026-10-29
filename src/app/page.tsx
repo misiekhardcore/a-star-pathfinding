@@ -2,16 +2,9 @@
 
 import { useRef, useState } from 'react';
 
-import './page.scss';
+import { AppHeader, DimensionControls, StrategyControls, VisualizerPanel } from '@/components';
 import { Node, Position } from '@/entities';
 import { PathFinding } from '@/lib';
-import {
-  ActionButtons,
-  DimensionControls,
-  Grid,
-  InteractionModeBar,
-  StrategyControls,
-} from '@/components';
 import {
   buildPathFinding,
   cloneGrid,
@@ -260,43 +253,44 @@ export default function Home() {
   }
 
   return (
-    <main className="main">
-      <h1>Pathfinding Visualizer</h1>
+    <div className="flex min-h-svh flex-col">
+      <AppHeader />
 
-      <div className="controls">
-        <DimensionControls
-          gridWidth={gridWidth}
-          gridHeight={gridHeight}
-          onDimensionChange={onDimensionChange}
-        />
-        <StrategyControls
-          movementCostId={movementCostId}
-          heuristicId={heuristicId}
-          totalCostId={totalCostId}
-          onMovementCostChange={onMovementCostChange}
-          onHeuristicChange={onHeuristicChange}
-          onTotalCostChange={onTotalCostChange}
-        />
-      </div>
+      <main className="mx-auto grid w-full max-w-7xl flex-1 items-start gap-4 px-4 py-6 sm:px-6 lg:grid-cols-[22rem_minmax(0,1fr)] lg:gap-6 lg:py-8">
+        <div className="order-2 flex min-w-0 flex-col gap-4 lg:order-1">
+          <DimensionControls
+            gridWidth={gridWidth}
+            gridHeight={gridHeight}
+            onDimensionChange={onDimensionChange}
+          />
+          <StrategyControls
+            movementCostId={movementCostId}
+            heuristicId={heuristicId}
+            totalCostId={totalCostId}
+            onMovementCostChange={onMovementCostChange}
+            onHeuristicChange={onHeuristicChange}
+            onTotalCostChange={onTotalCostChange}
+          />
+        </div>
 
-      <InteractionModeBar interactionMode={interactionMode} onModeChange={setInteractionMode} />
-
-      <ActionButtons
-        onRunAuto={runAuto}
-        onNextStep={getNextGrid}
-        onClearObstacles={clearObstacles}
-        onReset={reset}
-      />
-
-      <Grid
-        grid={grid}
-        startNode={startNode}
-        endNode={endNode}
-        path={path}
-        pathFinder={pathFinder}
-        interactionMode={interactionMode}
-        onNodeClick={onNodeClick}
-      />
-    </main>
+        {/* First on mobile so the board is what you land on. */}
+        <div className="order-1 min-w-0 lg:order-2">
+          <VisualizerPanel
+            grid={grid}
+            startNode={startNode}
+            endNode={endNode}
+            path={path}
+            pathFinder={pathFinder}
+            interactionMode={interactionMode}
+            onModeChange={setInteractionMode}
+            onNodeClick={onNodeClick}
+            onRunAuto={runAuto}
+            onNextStep={getNextGrid}
+            onClearObstacles={clearObstacles}
+            onReset={reset}
+          />
+        </div>
+      </main>
+    </div>
   );
 }

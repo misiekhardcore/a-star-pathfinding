@@ -6,7 +6,7 @@ module.exports = {
   '**/*.(ts|tsx|js)': [`eslint --fix`, `prettier --write`],
 
   // Format style files
-  '**/*.(scss)': [`prettier --write`],
+  '**/*.css': [`prettier --write`],
 
   // Format MarkDown and JSON
   '**/*.(md|json)': [`prettier --write`],
