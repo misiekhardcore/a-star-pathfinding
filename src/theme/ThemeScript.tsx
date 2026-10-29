@@ -1,4 +1,4 @@
-import { THEME_STORAGE_KEY } from './ThemeProvider';
+import { THEME_STORAGE_KEY } from './theme-storage';
 
 /**
  * Applies the stored theme before the first paint.

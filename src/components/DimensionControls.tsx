@@ -47,17 +47,20 @@ interface DimensionSliderProps {
  * A dimension slider with a mono readout.
  *
  * The name lives on the thumb, which is what takes focus, so a screen reader
- * announces "Columns, 25" rather than an unnamed slider.
+ * announces "Columns, 25" rather than an unnamed slider. The label therefore
+ * carries no `htmlFor`: a slider's root is not a labelable form element, and
+ * `name` reaches the hidden input Radix renders for form submissions.
  */
 function DimensionSlider({ id, label, value, onChange }: DimensionSliderProps) {
   return (
     <Field className="gap-2">
       <div className="flex items-center justify-between gap-2">
-        <FieldLabel htmlFor={id}>{label}</FieldLabel>
+        <FieldLabel>{label}</FieldLabel>
         <span className="font-mono text-xs text-muted-foreground tabular-nums">{value}</span>
       </div>
       <Slider
         id={id}
+        name={id}
         aria-label={label}
         thumbLabels={[label]}
         min={MIN_DIMENSION}

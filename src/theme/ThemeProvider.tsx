@@ -10,11 +10,10 @@ import {
   type ReactNode,
 } from 'react';
 
+import { THEME_STORAGE_KEY } from './theme-storage';
+
 export type Theme = 'light' | 'dark' | 'system';
 export type ResolvedTheme = 'light' | 'dark';
-
-/** Shared with the inline script, which applies the stored theme before paint. */
-export const THEME_STORAGE_KEY = 'a-star-theme';
 
 const DARK_QUERY = '(prefers-color-scheme: dark)';
 
