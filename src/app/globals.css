@@ -9,9 +9,6 @@
 @import 'tailwindcss';
 @import '@konopskidev/ui/styles.css';
 
-/* Let Tailwind see the class names the design-system components carry. */
-@source '../../node_modules/@konopskidev/ui/dist';
-
 /*
  * Canvas palette.
  *

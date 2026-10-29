@@ -58,12 +58,6 @@ export default defineConfig([
     },
   },
   {
-    // Tailwind's `@source` is not standard CSS and `@eslint/css` offers no
-    // allow-list for at-rules; every other CSS rule still applies.
-    files: ['src/app/globals.css'],
-    rules: { 'css/no-invalid-at-rules': 'off' },
-  },
-  {
     ignores: [
       '**/jest.config.js',
       '**/cypress.config.ts',
