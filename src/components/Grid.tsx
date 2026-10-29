@@ -9,7 +9,12 @@ import { PathFinding } from '@/lib';
 import { useGridPalette } from '@/theme/useGridPalette';
 import type { InteractionMode } from '@/types';
 
-const MIN_CELL_SIZE = 8;
+/*
+ * The floor has to stay small enough that a 50-column board still fits the
+ * narrowest column: 8 px cells overflowed a 375 px viewport, so anything
+ * above ~4 px makes the board a source of horizontal scroll.
+ */
+const MIN_CELL_SIZE = 4;
 const MAX_CELL_SIZE = 44;
 /** Keeps a tall board from pushing the rest of the page off screen. */
 const MAX_BOARD_HEIGHT = 560;
