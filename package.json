@@ -70,7 +70,7 @@
     "eslint-config-next": "16.2.12",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.7",
-    "globals": "17.7.0",
+    "globals": "17.13.0",
     "husky": "9.1.7",
     "jest": "30.4.2",
     "jest-environment-jsdom": "30.4.1",
