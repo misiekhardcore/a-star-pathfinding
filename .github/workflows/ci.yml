@@ -17,10 +17,10 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # main
 
       - name: Set up node
-        uses: actions/setup-node@main
+        uses: actions/setup-node@101b3474143230c3562bd21f0b3c3f8254784571 # main
         with:
           node-version: 24
           cache: yarn
@@ -39,10 +39,10 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # main
 
       - name: Set up node
-        uses: actions/setup-node@main
+        uses: actions/setup-node@101b3474143230c3562bd21f0b3c3f8254784571 # main
         with:
           node-version: 24
           cache: yarn
@@ -61,10 +61,10 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # main
 
       - name: Set up node
-        uses: actions/setup-node@main
+        uses: actions/setup-node@101b3474143230c3562bd21f0b3c3f8254784571 # main
         with:
           node-version: 24
           cache: yarn
