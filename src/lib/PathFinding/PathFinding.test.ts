@@ -56,6 +56,43 @@ describe('PathFinding', () => {
       const pathFinding = new PathFinding(grid, startNode, endNode);
       expect(pathFinding.isEndReached()).toBe(false);
     });
+
+    it('should finish when the configured endpoint is not bottom-right', () => {
+      const testGrid = [
+        [new Node(new Position(0, 0)), new Node(new Position(1, 0)), new Node(new Position(2, 0))],
+        [new Node(new Position(0, 1)), new Node(new Position(1, 1)), new Node(new Position(2, 1))],
+        [new Node(new Position(0, 2)), new Node(new Position(1, 2)), new Node(new Position(2, 2))],
+      ];
+      const pathFinding = new PathFinding(testGrid, testGrid[0][0], testGrid[1][1]);
+      let steps = 0;
+
+      while (!pathFinding.isEndReached() && steps < 10) {
+        pathFinding.getNextStep();
+        steps += 1;
+      }
+
+      expect(pathFinding.isEndReached()).toBe(true);
+      expect(pathFinding.getPath().at(-1)).toBe(testGrid[1][1]);
+    });
+
+    it('should finish when no path exists', () => {
+      const testGrid = [
+        [new Node(new Position(0, 0)), new Node(new Position(1, 0)), new Node(new Position(2, 0))],
+        [new Node(new Position(0, 1)), new Node(new Position(1, 1)), new Node(new Position(2, 1))],
+        [new Node(new Position(0, 2)), new Node(new Position(1, 2)), new Node(new Position(2, 2))],
+      ];
+      testGrid[1].forEach((node) => node.setWalkable(false));
+      const pathFinding = new PathFinding(testGrid, testGrid[0][0], testGrid[2][2]);
+      let steps = 0;
+
+      while (!pathFinding.isEndReached() && steps < 10) {
+        pathFinding.getNextStep();
+        steps += 1;
+      }
+
+      expect(pathFinding.isEndReached()).toBe(true);
+      expect(pathFinding.getPath()).toEqual([]);
+    });
   });
 
   describe('isPathNode', () => {

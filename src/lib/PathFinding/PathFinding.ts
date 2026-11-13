@@ -96,7 +96,7 @@ export class PathFinding {
   }
 
   isEndReached(): boolean {
-    return this.getLowestFNode() === this.grid[this.grid.length - 1][this.grid[0].length - 1];
+    return this.isInClosed(this.endNode) || this.open.length === 0;
   }
 
   public getLowestFNode(): Node | undefined {
