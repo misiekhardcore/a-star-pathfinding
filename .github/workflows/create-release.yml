@@ -32,14 +32,15 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: '24'
-          cache: 'yarn'
+          node-version: 24
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Configure Git
         run: |
@@ -65,7 +66,7 @@ jobs:
           echo "tag_name=v$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Push changes
         if: ${{ !inputs.dry_run }}
