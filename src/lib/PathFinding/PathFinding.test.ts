@@ -85,13 +85,13 @@ describe('PathFinding', () => {
       const pathFinding = new PathFinding(testGrid, testGrid[0][0], testGrid[2][2]);
       let steps = 0;
 
-      while (!pathFinding.isEndReached() && steps < 10) {
+      while (!pathFinding.isEndReached() && steps < 20) {
         pathFinding.getNextStep();
         steps += 1;
       }
 
       expect(pathFinding.isEndReached()).toBe(true);
-      expect(pathFinding.getPath()).toEqual([]);
+      expect(pathFinding.getPath()).toEqual(testGrid[0]);
     });
   });
 

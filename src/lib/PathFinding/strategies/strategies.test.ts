@@ -127,8 +127,6 @@ describe('Strategy integration with PathFinding', () => {
     while (!pf.isEndReached()) {
       pf.getNextStep();
     }
-    // Process the end node to build the full path
-    pf.getNextStep();
 
     const path = pf.getPath();
     expect(path.length).toBeGreaterThanOrEqual(3);
@@ -157,8 +155,6 @@ describe('Strategy integration with PathFinding', () => {
     while (!pf.isEndReached()) {
       pf.getNextStep();
     }
-    // Process the end node to build the full path
-    pf.getNextStep();
 
     const path = pf.getPath();
     expect(path.length).toBeGreaterThanOrEqual(3);
@@ -182,8 +178,6 @@ describe('Strategy integration with PathFinding', () => {
     while (!pf.isEndReached()) {
       pf.getNextStep();
     }
-    // Process the end node to build the full path
-    pf.getNextStep();
 
     const path = pf.getPath();
     expect(path.length).toBeGreaterThanOrEqual(3);
