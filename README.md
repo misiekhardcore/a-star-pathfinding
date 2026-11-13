@@ -41,7 +41,7 @@ The algorithm explores nodes with the lowest F-cost first, ensuring it finds the
 ### Prerequisites
 
 - Node.js 18+
-- Yarn 4.x
+- PNPM
 
 ### Installation
 
@@ -55,13 +55,13 @@ cd a-star-pathfinding
 2. Install dependencies:
 
 ```bash
-yarn install
+pnpm install
 ```
 
 3. Run the development server:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser

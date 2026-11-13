@@ -1,6 +1,5 @@
 node_modules
 .next
-.yarn
 .swc
 coverage
 dist
@@ -11,3 +10,4 @@ build
 .env.test.local
 .env.production.local
 .pi
+pnpm-lock.yaml

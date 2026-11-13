@@ -67,7 +67,6 @@ export default defineConfig([
       '**/prettier.config.js',
       'next-env.d.ts',
       '.next',
-      '.yarn',
       '.swc',
       '.pi',
       'node_modules',

@@ -1,12 +1,12 @@
 # 📖 AGENTS.md — Internal Developer Documentation
 
 - **Tech Stack**:
-  - Next.js 16 (App Router)
-  - React 19 with TypeScript 5.9+
-  - Tailwind CSS v4 + [`@konopskidev/ui`](https://www.npmjs.com/package/@konopskidev/ui) for styling
+  - Next.js (App Router)
+  - React with TypeScript
+  - Tailwind CSS + [`@konopskidev/ui`](https://www.npmjs.com/package/@konopskidev/ui) for styling
   - Jest + Testing Library for tests
   - ESLint, Prettier, Husky + lint-staged
-- **Package Manager**: Yarn v4.x
+- **Package Manager**: PNPM
 - **Entry Point**: `src/app/page.tsx`
 
 ## Code structure
@@ -77,7 +77,7 @@ All three calculations use the **strategy pattern** via `PathFinding` constructo
 - **Client components**: The page is `'use client'` — uses React hooks (`useState`, `useRef`, `useCallback`).
 - **Path aliases**: `@/` maps to `src/`.
 - **ESLint**: Flat config (`eslint.config.mjs`), includes `prettier/prettier` as error.
-- **Prettier**: Runs as part of lint — `yarn lint` runs ESLint + Prettier check.
+- **Prettier**: Runs as part of lint — `pnpm lint` runs ESLint + Prettier check.
 
 ## Validation — run before finishing any change
 
@@ -91,23 +91,23 @@ npx tsc --noEmit
 npx jest --no-cache
 
 # 3. Lint (ESLint + Prettier check)
-yarn lint
+pnpm lint
 
 # 4. Build (runs lint then Next.js production build)
-yarn build
+pnpm build
 ```
 
 ## Scripts
 
 | Script            | What it does                         |
 | ----------------- | ------------------------------------ |
-| `yarn dev`        | Start dev server (Next.js Turbopack) |
-| `yarn build`      | `yarn lint && next build`            |
-| `yarn lint`       | `yarn eslint && yarn prettier`       |
-| `yarn eslint`     | `eslint .`                           |
-| `yarn prettier`   | `prettier . --check`                 |
-| `yarn test`       | `jest`                               |
-| `yarn test:watch` | `jest --watch`                       |
+| `pnpm dev`        | Start dev server (Next.js Turbopack) |
+| `pnpm build`      | `pnpm lint && next build`            |
+| `pnpm lint`       | `pnpm eslint && pnpm prettier`       |
+| `pnpm eslint`     | `eslint .`                           |
+| `pnpm prettier`   | `prettier . --check`                 |
+| `pnpm test`       | `jest`                               |
+| `pnpm test:watch` | `jest --watch`                       |
 
 ## Key files
 

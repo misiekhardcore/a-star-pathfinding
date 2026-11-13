@@ -19,20 +19,20 @@ jobs:
     steps:
       - uses: actions/checkout@main
 
-      - name: Set up node
-        uses: actions/setup-node@main
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: yarn
-          cache-dependency-path: ${{ github.workspace}}/yarn.lock
+          cache: pnpm
 
       - name: Install node dependencies
         working-directory: ${{ github.workspace}}
-        run: yarn install
+        run: pnpm install
 
       - name: Run linting
         working-directory: ${{ github.workspace}}
-        run: yarn lint
+        run: pnpm lint
 
   unit-tests:
     name: Unit tests
@@ -41,20 +41,20 @@ jobs:
     steps:
       - uses: actions/checkout@main
 
-      - name: Set up node
-        uses: actions/setup-node@main
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: yarn
-          cache-dependency-path: ${{ github.workspace}}/yarn.lock
+          cache: pnpm
 
       - name: Install node dependencies
         working-directory: ${{ github.workspace}}
-        run: yarn install
+        run: pnpm install
 
       - name: Run tests
         working-directory: ${{ github.workspace}}
-        run: yarn test
+        run: pnpm test
 
   build:
     name: Build
@@ -63,17 +63,17 @@ jobs:
     steps:
       - uses: actions/checkout@main
 
-      - name: Set up node
-        uses: actions/setup-node@main
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: yarn
-          cache-dependency-path: ${{ github.workspace}}/yarn.lock
+          cache: pnpm
 
       - name: Install node dependencies
         working-directory: ${{ github.workspace}}
-        run: yarn install
+        run: pnpm install
 
       - name: Build
         working-directory: ${{ github.workspace}}
-        run: yarn build
+        run: pnpm build
